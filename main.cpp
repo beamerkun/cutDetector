@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
 
 		videoFile >> currentFrame;
 
-		if (currentFrameIndex == totalFrames) {
+		if (currentFrameIndex == totalFrames - 1) { 
 			break;
 		}
 		if (lastFrameIndex == 0) {
