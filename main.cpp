@@ -7,6 +7,9 @@
 #include <algorithm>
 #include <utility>
 #include <vector>
+#include <memory>   // unique_ptr
+
+#include <tclap/CmdLine.h>
 
 #include <opencv2/core/core.hpp>        // Basic OpenCV structures (cv::Mat, Scalar)
 #include <opencv2/imgproc/imgproc.hpp>  // Gaussian Blur
@@ -17,31 +20,51 @@
 using namespace std;
 using namespace cv;
 
+bool debug = false;
+
 int main(int argc, char *argv[]) {
-	VideoCapture videoFile("reklama.mp4");
+	std::string filename;
+	std::string options;
+
+	try {
+		TCLAP::CmdLine cmd("cutDetector", ' ', "0.1");
+		TCLAP::UnlabeledValueArg<std::string> nameArg("name","filename",true,"input.mp4","string", cmd);
+		TCLAP::SwitchArg debugSwitch("g","debug","enable debug mode", cmd, false);
+		TCLAP::ValueArg<std::string> optionArg("o","option_string","options for frame comparator",false,"","string",cmd);
+		cmd.parse(argc, argv);
+		debug = debugSwitch.getValue();
+		filename = nameArg.getValue();
+		options = optionArg.getValue();
+	} 
+	catch (TCLAP::ArgException &e) { 
+		std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; 
+	}
+
+	VideoCapture videoFile(filename);
 
 	if( !videoFile.isOpened() ){
-		std::cerr << "failed to open file" << std::endl;
+		std::cerr << "failed to open file " << filename << std::endl;
 		return -1;
 	}
 
-	FrameComparatorImpl* comparator = new FrameComparatorImpl();
+	std::unique_ptr<FrameComparatorImpl> comparator(new FrameComparatorImpl());
+	comparator->setOptions(options);
 
 	Size dimensions = Size(
 			(int)videoFile.get(CV_CAP_PROP_FRAME_WIDTH),
-			(int)videoFile.get(CV_CAP_PROP_FRAME_WIDTH));
+			(int)videoFile.get(CV_CAP_PROP_FRAME_HEIGHT));
 
 	Mat currentFrame;
 	Mat lastFrame;
 
-	std::list<std::pair<int,int> > scenes;
-
 	const char* window1 = "ostatnia klatka sceny";
 	const char* window2 = "pierwsza klatka sceny";
 
-	namedWindow(window1);
-	namedWindow(window2);
-
+	std::list<std::pair<int,int> > scenes;
+	if (debug) {
+		namedWindow(window1);
+		namedWindow(window2);
+	}
 	int lastFrameIndex, currentFrameIndex;
 	currentFrameIndex = 0;
 	int sceneStartIndex = 0;
@@ -64,33 +87,34 @@ int main(int argc, char *argv[]) {
 		if (lastFrameIndex == 0) {
 			continue;
 		}
-		if( comparator->isDifferentScene(lastFrame, currentFrame) ){
+		if( comparator->isDifferentScene(lastFrame, currentFrame, debug) ){
 			std::cout << "[" << sceneStartIndex << ";" << lastFrameIndex << "]" << std::endl;
 			scenes.push_back(std::make_pair(sceneStartIndex, currentFrameIndex));
 			sceneStartIndex = currentFrameIndex;
-			Mat lastFrameResized, currentFrameResized;
-			resize(lastFrame,
-				   lastFrameResized,
-				   Size(),
-				   0.25,
-				   0.25,
-				   CV_INTER_AREA);
-			resize(currentFrame,
-				   currentFrameResized,
-				   Size(),
-				   0.25,
-				   0.25,
-				   CV_INTER_AREA);
-			imshow(window1, lastFrameResized);
-			imshow(window2, currentFrameResized);
-			waitKey(10000);
+			if (debug) {
+				Mat lastFrameResized, currentFrameResized;
+				resize(lastFrame,
+						lastFrameResized,
+						Size(),
+						0.5,
+						0.5,
+						CV_INTER_AREA);
+				resize(currentFrame,
+						currentFrameResized,
+						Size(),
+						0.5,
+						0.5,
+						CV_INTER_AREA);
+				imshow(window1, lastFrameResized);
+				imshow(window2, currentFrameResized);
+				waitKey(5000);
+			}
 		}
 
 	}
 
 	scenes.push_back(std::make_pair(sceneStartIndex, currentFrameIndex));
 	std::cout << "[" << sceneStartIndex << ";" << currentFrameIndex << "]" << std::endl;
-	delete comparator;
 
 	return 0;
 }

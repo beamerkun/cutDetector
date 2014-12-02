@@ -13,93 +13,69 @@
 #include <opencv2/core/core.hpp>        // Basic OpenCV structures (cv::Mat, Scalar)
 #include <opencv2/imgproc/imgproc.hpp>  // Gaussian Blur
 
-#define N 5
-#define SUBSPACES 16*9
-#define WIDTH_DIV 16
-#define HEIGHT_DIV 9
-
 using namespace std;
 using namespace cv;
 
 namespace {
-	double calculateEdgesDifference(Mat& frameLHS, Mat& frameRHS){
-		Mat tempLHS = frameLHS.clone();
-		Mat tempRHS = frameRHS.clone();
-
-		// Convert to greyscale.
-		cvtColor(tempLHS, tempLHS, CV_BGR2GRAY);
-		cvtColor(tempRHS, tempRHS, CV_BGR2GRAY);
-
-		// Filter out edges.
-		Sobel(tempLHS, tempLHS, -1, 1, 0);
-		Sobel(tempRHS, tempRHS, -1, 1, 0);
-
-		int totalEdgePixels = 0;
-		int stillEdgePixels = 0;
-
-		// Find edge pixel in left frame, then check if in right frame
-		// there is still edge pixen within NxN range.
-		int kSize = (N-1)/2;
-		for (int i = kSize; i < tempLHS.rows - kSize; ++i ) {
-			for (int j = kSize; j < tempLHS.cols - kSize; ++j) {
-				uint8_t currentPixel = tempLHS.at<uint8_t>(i ,j);
-				totalEdgePixels++;
-				if (currentPixel) {
-					bool stop = false;
-					for (int y = i - kSize; y < i + kSize; ++y ) {
-						for (int x = j - kSize; x < j + kSize; ++x) {
-							uint8_t stillPixel = tempRHS.at<uint8_t>(y ,x);
-							if (stillPixel) {
-								++stillEdgePixels;
-								stop = true;
-								break;
-							}
-						}
-						if (stop) {
-							break;
-						}
-					}
-
+	int N = 5;
+	int WIDTH_DIV = 16;
+	int HEIGHT_DIV = 9;
+	int SUBSPACES = WIDTH_DIV * HEIGHT_DIV;
+	void colorSubspaces(Mat& frame1, Mat& frame2, Mat& result) {
+		Size frameSize = frame1.size();
+		int hDiv = frameSize.height / HEIGHT_DIV;
+		int wDiv = frameSize.width / WIDTH_DIV;
+		double m = mean(result)[0];
+		for( int h = 0; h < HEIGHT_DIV; ++h ){
+			for( int w = 0; w < WIDTH_DIV; ++w ){
+				double* ptr = result.ptr<double>(h*WIDTH_DIV+w); 
+				if( abs(*ptr - m) < 0.3*m && false) {
+					Rect region = Rect( w*wDiv, h*hDiv, wDiv, hDiv );
+					rectangle(frame1, region, Scalar(0,0,255,0.3), CV_FILLED);
 				}
 			}
 		}
-
-		return stillEdgePixels/(double)totalEdgePixels;
 	}
-
 }
 
-bool FrameComparatorImpl::isDifferentScene(Mat& lastFrame, Mat& currentFrame){
-	double histogramDistance, edgeDistance;
+void FrameComparatorImpl::setOptions(string options) {
+	stringstream stringStream(options);
+	if(stringStream.good())
+		stringStream >> histogramThreshold;
+}
+
+bool FrameComparatorImpl::isDifferentScene(Mat& lastFrame, Mat& currentFrame, bool debug){
+	double histogramDistance;
 
 	// Divide frames into HEIGHT_DIV*WIDTH_DIV segments.
-	Mat res;
+	Mat result;
 	Size frameSize = lastFrame.size();
 	int hDiv = frameSize.height / HEIGHT_DIV;
 	int wDiv = frameSize.width / WIDTH_DIV;
 	for( int h = 0; h < HEIGHT_DIV; ++h ){
 		for( int w = 0; w < WIDTH_DIV; ++w ){
-			Rect region = Rect( w*wDiv, h*hDiv, hDiv, wDiv );
+			Rect region = Rect( w*wDiv, h*hDiv, wDiv, hDiv );
 			Mat r1 = lastFrame(region);
 			Mat r2 = currentFrame(region);
-			res.push_back( calculateFrameDistance(r1, r2) );
+			result.push_back( calculateFrameDistance(r1, r2) );
 		}
 	}
-	edgeDistance = calculateEdgesDifference(lastFrame, currentFrame);
 
 	histogramDistance = 0;
-	double m = mean(res)[0];
+	int count = 0;
+	double m = mean(result)[0];
 	for( int i = 0; i < SUBSPACES; ++i ){
-		double* ptr = res.ptr<double>(i); 
-		if( abs(*ptr - m) < 0.3*m )
+		double* ptr = result.ptr<double>(i); 
+		if( abs(*ptr - m) < 0.3*m ){
 			histogramDistance += *ptr;
+			count++;
+		}
 	}
-#ifdef _DEBUG
-	std::cout << histogramDistance << std::endl;
-	std::cout << edgeDistance << std::endl;
-#endif
-	if (histogramDistance < histogramThreshold &&
-		edgeDistance < edgeTreshold) {
+	if(debug && false)
+		std::cout << histogramDistance/count << " t: " << histogramThreshold << std::endl;
+	if (histogramDistance/count < histogramThreshold) {
+		if(debug)
+			colorSubspaces(lastFrame, currentFrame, result);
 		return true;
 	}
 	return false;

@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 2.8)
 
 SET( CMAKE_CXX_COMPILER_INIT clang++ )
 SET( CMAKE_BUILD_TYPE Debug )
-SET( CMAKE_CXX_FLAGS -std=c++11 )
+SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
 project( main )
 
 find_package( OpenCV REQUIRED )
 
-include_directories( ${OpenCV_INCLUDE_DIRS} includes )
+include_directories( ${OpenCV_INCLUDE_DIRS} include )
 
 ADD_SUBDIRECTORY( lib )
 
