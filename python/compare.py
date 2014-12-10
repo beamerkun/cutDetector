@@ -5,14 +5,30 @@ import argparse
 import re
 from sys import stdout
 
-def strip_frame_pair(pair):
-    return re.sub(r'.*;(.*)\].*', r'\1', pair)
+class FalconPair(object):
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+    def __eq__(self, other):
+        return self.b == other.b
+    def __lt__(self, other):
+        return self.b < other.b
+    def __hash__(self):
+        return hash(self.b)
+    def __str__(self):
+        return "[{a};{b}]".format(
+            a = self.a,
+            b = self.b)
+
+def split_frame_pair(pair):
+    a,_,b = pair.lstrip("[").rstrip("]").partition(";")
+    return FalconPair(a,b)
 
 def read_frames(filename):
     frames = set()
     with open(filename, "r") as f:
         for line in f:
-            frames.add(line.rstrip())
+            frames.add(split_frame_pair(line.rstrip()))
     return frames
 
 def main():
@@ -23,27 +39,25 @@ def main():
     args = parser.parse_args()
 
     reference_set = read_frames(args.reference)
-    reference_set2 = set(strip_frame_pair(x) for x in reference_set)
 
     cuts_set = read_frames(args.cuts)
-    cuts_set2 = set(strip_frame_pair(x) for x in cuts_set)
 
-    print("True-positives: ", len(cuts_set2.intersection(reference_set2)))
-    print("False-positives: ", len(cuts_set2 - reference_set2))
-    print("False-negatives: ", len(reference_set2 - cuts_set2))
+    print("True-positives: ", len(cuts_set & reference_set))
+    print("False-positives: ", len(cuts_set - reference_set))
+    print("False-hits: ", len(reference_set - cuts_set))
 
     if args.verbose:
         if stdout.isatty():
             print("\nFalse-positives:")
-            for i in cuts_set - reference_set: # TU NIE DZIALA
+            for i in sorted (cuts_set - reference_set):
                 print("  ", i)
             print("\nFalse-hits:")
-            for i in reference_set - cuts_set: # TU TEZ
+            for i in sorted (reference_set - cuts_set):
                 print("  ", i)
         else:
-            for i in cuts_set - reference_set: # TU NIE DZIALA
+            for i in sorted (cuts_set - reference_set):
                 print(i)
-            for i in reference_set - cuts_set: # TU TEZ
+            for i in sorted (reference_set - cuts_set):
                 print(i)
 
 main()
