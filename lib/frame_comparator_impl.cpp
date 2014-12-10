@@ -66,7 +66,7 @@ bool FrameComparatorImpl::isDifferentScene(Mat& lastFrame, Mat& currentFrame, bo
 	double m = mean(result)[0];
 	for( int i = 0; i < SUBSPACES; ++i ){
 		double* ptr = result.ptr<double>(i); 
-		if( abs(*ptr - m) < 0.3*m ){
+		if (abs(*ptr - m) < 0.3*m) {
 			histogramDistance += *ptr;
 			count++;
 		}
