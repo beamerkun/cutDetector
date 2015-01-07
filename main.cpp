@@ -16,6 +16,7 @@
 #include <opencv2/highgui/highgui.hpp>  // OpenCV window I/O
 
 #include <frame_comparator_impl.hpp>
+#include <video_reader_impl.hpp>
 
 using namespace std;
 using namespace cv;
@@ -38,21 +39,20 @@ int main(int argc, char *argv[]) {
 	} 
 	catch (TCLAP::ArgException &e) { 
 		std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; 
+		return -1;
 	}
 
-	VideoCapture videoFile(filename);
-
-	if( !videoFile.isOpened() ){
+	std::unique_ptr<VideoReader> videoReader(new VideoReaderImpl());
+	if(!videoReader->openFile(filename)) {
 		std::cerr << "failed to open file " << filename << std::endl;
 		return -1;
 	}
 
-	std::unique_ptr<FrameComparatorImpl> comparator(new FrameComparatorImpl());
+	std::unique_ptr<FrameComparator> comparator(new FrameComparatorImpl());
 	comparator->setOptions(options);
 
-	Size dimensions = Size(
-			(int)videoFile.get(CV_CAP_PROP_FRAME_WIDTH),
-			(int)videoFile.get(CV_CAP_PROP_FRAME_HEIGHT));
+	Size dimensions = Size(videoReader->getFrameWidth(),
+			videoReader->getFrameHeight());
 
 	Mat currentFrame;
 	Mat lastFrame;
@@ -62,59 +62,79 @@ int main(int argc, char *argv[]) {
 
 	std::list<std::pair<int,int> > scenes;
 	if (debug) {
-		namedWindow(window1);
+		int flags = CV_WINDOW_AUTOSIZE | CV_WINDOW_KEEPRATIO | CV_GUI_EXPANDED;
+		namedWindow(window1, flags);
 		namedWindow(window2);
 	}
 	int lastFrameIndex, currentFrameIndex;
+	bool zeroBased = true;
 	currentFrameIndex = 0;
 	int sceneStartIndex = 0;
-	int totalFrames = videoFile.get(CV_CAP_PROP_FRAME_COUNT) - 1;
+	int totalFrames = videoReader->getTotalFrameCount();
 
-	videoFile.grab();
-	videoFile.retrieve(currentFrame);
+	videoReader->getFrame(currentFrameIndex, currentFrame);
+	if(currentFrame.empty()) {
+		// file indexes are not 0-based. We need to adjust.
+		zeroBased = false;
+		currentFrameIndex++;
+		videoReader->getFrame(currentFrameIndex, currentFrame);
+	}
 
 	while(1){
 		lastFrame = currentFrame.clone();	
 
 		lastFrameIndex = currentFrameIndex;
-		currentFrameIndex = videoFile.get(CV_CAP_PROP_POS_FRAMES);
-
-		videoFile >> currentFrame;
+		currentFrameIndex++;
 
 		if (currentFrameIndex == totalFrames - 1) { 
 			break;
 		}
-		if (lastFrameIndex == 0) {
-			continue;
+		if(!videoReader->getFrame(currentFrameIndex, currentFrame)) {
+			break;
 		}
-		if( comparator->isDifferentScene(lastFrame, currentFrame, debug) ){
-			std::cout << "[" << sceneStartIndex << ";" << lastFrameIndex << "]" << std::endl;
-			scenes.push_back(std::make_pair(sceneStartIndex, currentFrameIndex));
-			sceneStartIndex = currentFrameIndex;
-			if (debug) {
-				Mat lastFrameResized, currentFrameResized;
-				resize(lastFrame,
-						lastFrameResized,
-						Size(),
-						0.5,
-						0.5,
-						CV_INTER_AREA);
-				resize(currentFrame,
-						currentFrameResized,
-						Size(),
-						0.5,
-						0.5,
-						CV_INTER_AREA);
-				imshow(window1, lastFrameResized);
-				imshow(window2, currentFrameResized);
-				waitKey(5000);
-			}
+		if (debug) {
+			Mat lastFrameResized, currentFrameResized;
+			double scale = 400.0 / dimensions.width; 
+			resize(lastFrame,
+					lastFrameResized,
+					Size(),
+					scale,
+					scale,
+					CV_INTER_AREA);
+			resize(currentFrame,
+					currentFrameResized,
+					Size(),
+					scale,
+					scale,
+					CV_INTER_AREA);
+			int fontFace = FONT_HERSHEY_SCRIPT_SIMPLEX;
+			double fontScale = 1;
+			int thickness = 1;
+			putText(currentFrameResized, 
+					to_string(zeroBased ? currentFrameIndex : currentFrameIndex - 1),
+					Point(10,30),
+					fontFace, fontScale, Scalar::all(255), thickness, 8);
+			putText(lastFrameResized,
+					to_string(zeroBased ? lastFrameIndex : lastFrameIndex - 1),
+					Point(10,30),
+					fontFace, fontScale, Scalar::all(255), thickness, 8);
+			imshow(window1, lastFrameResized);
+			imshow(window2, currentFrameResized);
+			waitKey(5000);
+		}
+
+		if(comparator->isDifferentScene(lastFrame, currentFrame, debug) ){
+			int sceneEndIndex = zeroBased ? lastFrameIndex : lastFrameIndex - 1;
+			std::cout << "[" << sceneStartIndex << ";" << sceneEndIndex << "]" << std::endl;
+			scenes.push_back(std::make_pair(sceneStartIndex, sceneEndIndex));
+			sceneStartIndex = sceneEndIndex + 1;
 		}
 
 	}
 
-	scenes.push_back(std::make_pair(sceneStartIndex, currentFrameIndex));
-	std::cout << "[" << sceneStartIndex << ";" << currentFrameIndex << "]" << std::endl;
+	int sceneEndIndex = zeroBased ? lastFrameIndex : lastFrameIndex - 1;
+	std::cout << "[" << sceneStartIndex << ";" << sceneEndIndex << "]" << std::endl;
+	scenes.push_back(std::make_pair(sceneStartIndex, sceneEndIndex));
 
 	return 0;
 }

@@ -44,14 +44,14 @@ def main():
 
     print("True-positives: ", len(cuts_set & reference_set))
     print("False-positives: ", len(cuts_set - reference_set))
-    print("False-hits: ", len(reference_set - cuts_set))
+    print("False-negatives: ", len(reference_set - cuts_set))
 
     if args.verbose:
         if stdout.isatty():
             print("\nFalse-positives:")
             for i in sorted (cuts_set - reference_set):
                 print("  ", i)
-            print("\nFalse-hits:")
+            print("\nFalse-negatives:")
             for i in sorted (reference_set - cuts_set):
                 print("  ", i)
         else:

@@ -17,11 +17,12 @@ using namespace std;
 using namespace cv;
 
 namespace {
-	int N = 5;
-	int WIDTH_DIV = 16;
-	int HEIGHT_DIV = 9;
-	int SUBSPACES = WIDTH_DIV * HEIGHT_DIV;
-	void colorSubspaces(Mat& frame1, Mat& frame2, Mat& result) {
+	void colorSubspaces(FrameComparatorImpl::param param, Mat& frame1, Mat& frame2, Mat& result) {
+		bool limit = param.limitRejects;
+		int N = param.rejected;
+		int WIDTH_DIV = param.widthDiv;
+		int HEIGHT_DIV = param.heightDiv;
+		int SUBSPACES = WIDTH_DIV * HEIGHT_DIV;
 		Size frameSize = frame1.size();
 		int hDiv = frameSize.height / HEIGHT_DIV;
 		int wDiv = frameSize.width / WIDTH_DIV;
@@ -41,10 +42,29 @@ namespace {
 void FrameComparatorImpl::setOptions(string options) {
 	stringstream stringStream(options);
 	if(stringStream.good())
-		stringStream >> histogramThreshold;
+		stringStream >> parameters.histogramThreshold;
+	else return;
+	stringStream.ignore(255, ',');
+	if(stringStream.good())
+		stringStream >> parameters.limitRejects;
+	else return;
+	stringStream.ignore(255, ',');
+	if(stringStream.good())
+		stringStream >> parameters.rejected;
+	else return;
+	stringStream.ignore(255, ',');
+	if(stringStream.good())
+		stringStream >> parameters.widthDiv;
+	else return;
+	stringStream.ignore(255, ',');
+	if(stringStream.good())
+		stringStream >> parameters.heightDiv;
 }
 
 bool FrameComparatorImpl::isDifferentScene(Mat& lastFrame, Mat& currentFrame, bool debug){
+	int WIDTH_DIV = parameters.widthDiv;
+	int HEIGHT_DIV = parameters.heightDiv;
+	int SUBSPACES = WIDTH_DIV * HEIGHT_DIV;
 	double histogramDistance;
 
 	// Divide frames into HEIGHT_DIV*WIDTH_DIV segments.
@@ -72,10 +92,10 @@ bool FrameComparatorImpl::isDifferentScene(Mat& lastFrame, Mat& currentFrame, bo
 		}
 	}
 	if(debug && false)
-		std::cout << histogramDistance/count << " t: " << histogramThreshold << std::endl;
-	if (histogramDistance/count < histogramThreshold) {
+		std::cout << histogramDistance/count << " t: " << parameters.histogramThreshold << std::endl;
+	if (histogramDistance/count < parameters.histogramThreshold) {
 		if(debug)
-			colorSubspaces(lastFrame, currentFrame, result);
+			colorSubspaces(parameters, lastFrame, currentFrame, result);
 		return true;
 	}
 	return false;
@@ -117,12 +137,12 @@ double FrameComparatorImpl::calculateFrameDistance(Mat& lastFrame, Mat& currentF
 				histogramCurrent, 1, histSize, ranges,
 				true, false );
 
-		normalize(histogramCurrent,
-				histogramCurrent,
-				0, 1, NORM_MINMAX, -1, Mat() );
-		normalize(histogramLast,
-				histogramLast,
-				0, 1, NORM_MINMAX, -1, Mat() );
+//		normalize(histogramCurrent,
+//				histogramCurrent,
+//				0, 1, NORM_MINMAX, -1, Mat() );
+//		normalize(histogramLast,
+//				histogramLast,
+//				0, 1, NORM_MINMAX, -1, Mat() );
 
 		sum += compareHist(histogramCurrent,
 				histogramLast,

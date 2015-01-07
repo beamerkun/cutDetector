@@ -7,11 +7,18 @@ using namespace std;
 using namespace cv;
 
 class FrameComparatorImpl : public FrameComparator {
-   double histogramThreshold = 0.7;
+	public:
+    struct param {
+		double histogramThreshold = 0.7;
+		bool limitRejects = false;
+		int rejected = 5;
+		int widthDiv = 16;
+		int heightDiv = 9;
+	};
 
-  public:
     void setOptions(string options);
 	bool isDifferentScene(Mat& lastFrame, Mat& currentFrame, bool debug);
 	double calculateFrameDistance(Mat& lastFrame, Mat& currentFrame);
 
+	param parameters;
 }; // class FrameComparatorImpl
