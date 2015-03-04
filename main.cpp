@@ -1,3 +1,4 @@
+// TODO recheck if all includes are needed
 #include <iostream> // for standard I/O
 #include <string>   // for strings
 #include <iomanip>  // for controlling float print precision
@@ -22,8 +23,11 @@ using namespace std;
 using namespace cv;
 
 bool debug = false;
+const char* window1 = "ostatnia klatka sceny";
+const char* window2 = "pierwsza klatka sceny";
 
 int main(int argc, char *argv[]) {
+	// TODO refactor out commandline
 	std::string filename;
 	std::string options;
 
@@ -57,8 +61,6 @@ int main(int argc, char *argv[]) {
 	Mat currentFrame;
 	Mat lastFrame;
 
-	const char* window1 = "ostatnia klatka sceny";
-	const char* window2 = "pierwsza klatka sceny";
 
 	std::list<std::pair<int,int> > scenes;
 	if (debug) {
@@ -80,6 +82,7 @@ int main(int argc, char *argv[]) {
 		videoReader->getFrame(currentFrameIndex, currentFrame);
 	}
 
+	// TODO refactor out loop
 	while(1){
 		lastFrame = currentFrame.clone();	
 
