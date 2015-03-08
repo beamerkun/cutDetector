@@ -16,6 +16,7 @@
 #include <opencv2/imgproc/imgproc.hpp>  // Gaussian Blur
 #include <opencv2/highgui/highgui.hpp>  // OpenCV window I/O
 
+#include <command_line_impl.hpp>
 #include <frame_comparator_impl.hpp>
 #include <video_reader_impl.hpp>
 
@@ -27,24 +28,18 @@ const char* window1 = "ostatnia klatka sceny";
 const char* window2 = "pierwsza klatka sceny";
 
 int main(int argc, char *argv[]) {
-	// TODO refactor out commandline
 	std::string filename;
 	std::string options;
 
-	try {
-		TCLAP::CmdLine cmd("cutDetector", ' ', "0.1");
-		TCLAP::UnlabeledValueArg<std::string> nameArg("name","filename",true,"input.mp4","string", cmd);
-		TCLAP::SwitchArg debugSwitch("g","debug","enable debug mode", cmd, false);
-		TCLAP::ValueArg<std::string> optionArg("o","option_string","options for frame comparator",false,"","string",cmd);
-		cmd.parse(argc, argv);
-		debug = debugSwitch.getValue();
-		filename = nameArg.getValue();
-		options = optionArg.getValue();
-	} 
-	catch (TCLAP::ArgException &e) { 
-		std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; 
+	std::unique_ptr<CommandLine> commandLine(new CommandLineImpl());
+
+	if(!commandLine->Init(argc, argv)) {
 		return -1;
 	}
+
+	debug = commandLine->isDebug();
+	filename = commandLine->getFilename();
+	options = commandLine->getOptionString();
 
 	std::unique_ptr<VideoReader> videoReader(new VideoReaderImpl());
 	if(!videoReader->openFile(filename)) {
