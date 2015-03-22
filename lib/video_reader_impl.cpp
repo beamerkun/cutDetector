@@ -22,10 +22,10 @@ bool VideoReaderImpl::isOpen() {
 
 bool VideoReaderImpl::getFrame(int frameIndex, cv::Mat& result) {
   if(!isOpen() || frameIndex < 0 || frameIndex > getTotalFrameCount())
-	  return false;
+    return false;
   // We can't read frames backwards. Reopen file to start from beginning.
   if(frameIndex < getCurrentFrameIndex()) {
-	  openFile(filename_);
+    openFile(filename_);
   }
   // Skip frames till we reach desired frameIndex.
   while(getCurrentFrameIndex() != frameIndex) {

@@ -9,18 +9,18 @@
 using cv::Mat;
 
 class FrameComparatorImpl : public FrameComparator {
-	public:
+  public:
     struct param {
-		double histogramThreshold = 0.7;
-		bool limitRejects = false;
-		int rejected = 5;
-		int widthDiv = 16;
-		int heightDiv = 9;
-	};
+    double histogramThreshold = 0.7;
+    bool limitRejects = false;
+    int rejected = 5;
+    int widthDiv = 16;
+    int heightDiv = 9;
+  };
 
-    void setOptions(std::string options);
-	bool isDifferentScene(Mat& lastFrame, Mat& currentFrame, double* distance);
-	double calculateFrameDistance(Mat& lastFrame, Mat& currentFrame);
+  void setOptions(std::string options);
+  bool isDifferentScene(Mat& lastFrame, Mat& currentFrame, double* distance);
+  double calculateFrameDistance(Mat& lastFrame, Mat& currentFrame);
 
-	param parameters;
+  param parameters;
 }; // class FrameComparatorImpl
