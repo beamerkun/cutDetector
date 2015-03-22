@@ -1,10 +1,12 @@
+#pragma once
+
 #include <frame_comparator.h> // filter interface
 
+#include <algorithm>
 #include <opencv2/core/core.hpp>        // Basic OpenCV structures (cv::Mat, Scalar)
 #include <opencv2/imgproc/imgproc.hpp>  // Gaussian Blur
 
-using namespace std;
-using namespace cv;
+using cv::Mat;
 
 class FrameComparatorImpl : public FrameComparator {
 	public:
@@ -16,8 +18,8 @@ class FrameComparatorImpl : public FrameComparator {
 		int heightDiv = 9;
 	};
 
-    void setOptions(string options);
-	bool isDifferentScene(Mat& lastFrame, Mat& currentFrame, bool debug);
+    void setOptions(std::string options);
+	bool isDifferentScene(Mat& lastFrame, Mat& currentFrame, double* distance);
 	double calculateFrameDistance(Mat& lastFrame, Mat& currentFrame);
 
 	param parameters;

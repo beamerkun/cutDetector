@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 
 class CommandLine {
@@ -7,3 +9,4 @@ class CommandLine {
 	virtual std::string getFilename() = 0;
 	virtual std::string getOptionString() = 0;
 }; // CommandLine
+

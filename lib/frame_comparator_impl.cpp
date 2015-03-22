@@ -61,7 +61,7 @@ void FrameComparatorImpl::setOptions(string options) {
 		stringStream >> parameters.heightDiv;
 }
 
-bool FrameComparatorImpl::isDifferentScene(Mat& lastFrame, Mat& currentFrame, bool debug){
+bool FrameComparatorImpl::isDifferentScene(Mat& lastFrame, Mat& currentFrame, double* distance){
 	int WIDTH_DIV = parameters.widthDiv;
 	int HEIGHT_DIV = parameters.heightDiv;
 	int SUBSPACES = WIDTH_DIV * HEIGHT_DIV;
@@ -91,29 +91,18 @@ bool FrameComparatorImpl::isDifferentScene(Mat& lastFrame, Mat& currentFrame, bo
 			count++;
 		}
 	}
-	if(debug && false)
-		std::cout << histogramDistance/count << " t: " << parameters.histogramThreshold << std::endl;
-	if (histogramDistance/count < parameters.histogramThreshold) {
-		if(debug)
-			colorSubspaces(parameters, lastFrame, currentFrame, result);
-		return true;
-	}
-	return false;
+	*distance = histogramDistance/count;
+
+	return histogramDistance/count < parameters.histogramThreshold;
 }
 
 double FrameComparatorImpl::calculateFrameDistance(Mat& lastFrame, Mat& currentFrame){
 	Mat channelsLastFrame[3];
 	Mat channelsCurrentFrame[3];
 
-	//	frames[0] = last.clone();
-	//	frames[1] = curr.clone();
-
 	// podział klatki na 3 oddzielne kanały
 	split(lastFrame		, channelsLastFrame);
 	split(currentFrame	, channelsCurrentFrame);
-
-	//	cvtColor(frames[0], frames[0], CV_BGR2GRAY);
-	//	cvtColor(frames[1], frames[1], CV_BGR2GRAY);
 
 	///////// OBLICZANIE HISTOGRAMU //////
 	// ilosc poziomow histogrami
@@ -136,13 +125,6 @@ double FrameComparatorImpl::calculateFrameDistance(Mat& lastFrame, Mat& currentF
 		calcHist(channelsCurrentFrame + i, 1, channels, Mat(),
 				histogramCurrent, 1, histSize, ranges,
 				true, false );
-
-//		normalize(histogramCurrent,
-//				histogramCurrent,
-//				0, 1, NORM_MINMAX, -1, Mat() );
-//		normalize(histogramLast,
-//				histogramLast,
-//				0, 1, NORM_MINMAX, -1, Mat() );
 
 		sum += compareHist(histogramCurrent,
 				histogramLast,

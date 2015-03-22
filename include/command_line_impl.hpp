@@ -1,3 +1,5 @@
+#pragma once
+
 #include <command_line.h>
 
 #include <memory>
