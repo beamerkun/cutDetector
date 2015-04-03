@@ -1,1 +1,0 @@
-ADD_LIBRARY(cutdetector SHARED frame_comparator_impl.cpp video_reader_impl.cpp command_line_impl.cpp scene_detector_impl.cpp command_line_debug.cpp)
