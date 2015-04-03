@@ -1,7 +1,10 @@
 #pragma once
 
-#include <opencv2/core/core.hpp>        // Basic OpenCV structures (cv::Mat, Size)
+#include <opencv2/core/core.hpp> // cv::Mat
+
 #include <string>
+
+using cv::Mat;
 
 class VideoReader {
 
@@ -12,7 +15,7 @@ class VideoReader {
   virtual bool isOpen() = 0;
 
   // Returns frame with specified 0-based index.
-  virtual bool getFrame(int index, cv::Mat& result) = 0;
+  virtual bool getFrame(int index, Mat& result) = 0;
 
   // Returns total number of frames in currently loaded file.
   virtual int getTotalFrameCount() = 0; 

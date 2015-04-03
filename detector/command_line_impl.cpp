@@ -9,7 +9,7 @@ CommandLineImpl::CommandLineImpl() :
       ("name", "filename", true, "input.mp4", "string", cmdLine_));
   debugSwitch_.reset(new TCLAP::SwitchArg("g", "debug", "enable debug mode", cmdLine_, false));
   optionsArg_.reset(new TCLAP::ValueArg<std::string>
-      ("o", "option_string", "options for frame comparator", false,"","string",cmdLine_));
+      ("o", "options_filename", "file containing options for frame comparator ", false, "", "string", cmdLine_));
 }
 
 bool CommandLineImpl::Init(int argc, char *argv[]) {
@@ -31,7 +31,7 @@ std::string CommandLineImpl::getFilename() {
   return filenameArg_->getValue();
 }
 
-std::string CommandLineImpl::getOptionString() {
+std::string CommandLineImpl::getOptionsFilename() {
   return optionsArg_->getValue();
 }
 

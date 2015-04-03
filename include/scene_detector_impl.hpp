@@ -4,6 +4,7 @@
 
 class SceneDetectorImpl : public SceneDetector {
   public:
+  // Overriden from SceneDetector
   sceneList detectScenes( VideoReader* videoReader, FrameComparator* frameComparator);
 
   void RegisterObserver(SceneDetector::Observer* observer);

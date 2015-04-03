@@ -6,8 +6,7 @@ using cv::Mat;
 
 class FrameComparator {
   public:
-  // TODO think out better way to pass options
-  virtual void setOptions(std::string options) {}
+  virtual void setOptionsFilename(std::string optionsFilename) {}
   virtual double calculateFrameDistance(Mat& lastFrame, Mat& currentFrame) = 0;
   virtual bool isDifferentScene(Mat& lastFrame, Mat& currentFrame, double* distance) = 0;
 }; // FrameComparator

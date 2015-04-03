@@ -1,8 +1,8 @@
 #pragma once
 
-#include <opencv2/highgui/highgui.hpp>
-
 #include "video_reader.h"
+
+#include <opencv/highgui.h> // VideoCapture
 
 class VideoReaderImpl : public VideoReader {
 

@@ -12,7 +12,7 @@ class CommandLineImpl : public CommandLine {
   bool Init(int argc, char *argv[]) override;
   bool isDebug() override;
   std::string getFilename() override;
-  std::string getOptionString() override;
+  std::string getOptionsFilename() override;
 
   private:
   TCLAP::CmdLine cmdLine_;

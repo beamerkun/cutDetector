@@ -2,9 +2,7 @@
 
 #include <frame_comparator.h> // filter interface
 
-#include <algorithm>
-#include <opencv2/core/core.hpp>        // Basic OpenCV structures (cv::Mat, Scalar)
-#include <opencv2/imgproc/imgproc.hpp>  // Gaussian Blur
+#include <opencv2/core/core.hpp> // cv::Mat
 
 using cv::Mat;
 
@@ -18,9 +16,10 @@ class FrameComparatorImpl : public FrameComparator {
     int heightDiv = 9;
   };
 
-  void setOptions(std::string options);
-  bool isDifferentScene(Mat& lastFrame, Mat& currentFrame, double* distance);
-  double calculateFrameDistance(Mat& lastFrame, Mat& currentFrame);
+  // Overriden from FrameComparator
+  void setOptionsFilename(std::string optionsFilename) override;
+  bool isDifferentScene(Mat& lastFrame, Mat& currentFrame, double* distance) override;
+  double calculateFrameDistance(Mat& lastFrame, Mat& currentFrame) override;
 
   param parameters;
 }; // class FrameComparatorImpl

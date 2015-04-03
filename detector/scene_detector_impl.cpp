@@ -1,7 +1,6 @@
 #include <scene_detector_impl.hpp>
 
-#include <algorithm>
-#include <iostream>
+#include <algorithm> // std::make_pair
 
 sceneList SceneDetectorImpl::detectScenes(VideoReader* videoReader,
                                       FrameComparator* frameComparator) {

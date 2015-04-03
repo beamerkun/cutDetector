@@ -1,23 +1,16 @@
 #include <frame_comparator_impl.hpp> // filter interface
 
-#include <iostream> // for standard I/O
-#include <string>   // for strings
-#include <iomanip>  // for controlling float print precision
+#include <string>
 #include <sstream>  // string to number conversion
-#include <cstdio>
-#include <list>
-#include <algorithm>
-#include <utility>
 #include <vector>
 
-#include <opencv2/core/core.hpp>        // Basic OpenCV structures (cv::Mat, Scalar)
-#include <opencv2/imgproc/imgproc.hpp>  // Gaussian Blur
+#include <opencv2/core/core.hpp>        // Basic OpenCV structures
+#include <opencv2/imgproc/imgproc.hpp>  // Drawing rectangles
 
-using namespace std;
 using namespace cv;
 
 namespace {
-  void colorSubspaces(FrameComparatorImpl::param param, Mat& frame1, Mat& frame2, Mat& result) {
+  void colorSubspaces(FrameComparatorImpl::param param, cv::Mat& frame1, cv::Mat& frame2, cv::Mat& result) {
     bool limit = param.limitRejects;
     int N = param.rejected;
     int WIDTH_DIV = param.widthDiv;
@@ -39,26 +32,8 @@ namespace {
   }
 }
 
-void FrameComparatorImpl::setOptions(string options) {
-  stringstream stringStream(options);
-  if(stringStream.good())
-    stringStream >> parameters.histogramThreshold;
-  else return;
-  stringStream.ignore(255, ',');
-  if(stringStream.good())
-    stringStream >> parameters.limitRejects;
-  else return;
-  stringStream.ignore(255, ',');
-  if(stringStream.good())
-    stringStream >> parameters.rejected;
-  else return;
-  stringStream.ignore(255, ',');
-  if(stringStream.good())
-    stringStream >> parameters.widthDiv;
-  else return;
-  stringStream.ignore(255, ',');
-  if(stringStream.good())
-    stringStream >> parameters.heightDiv;
+void FrameComparatorImpl::setOptionsFilename(std::string optionsFilename) {
+    // TODO
 }
 
 bool FrameComparatorImpl::isDifferentScene(Mat& lastFrame, Mat& currentFrame, double* distance){

@@ -25,11 +25,7 @@
 using namespace std;
 using namespace cv;
 
-bool debug = false;
-
 int main(int argc, char *argv[]) {
-  std::string filename;
-  std::string options;
 
   std::unique_ptr<CommandLine> commandLine(new CommandLineImpl());
 
@@ -37,9 +33,9 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  debug = commandLine->isDebug();
-  filename = commandLine->getFilename();
-  options = commandLine->getOptionString();
+  bool debug = commandLine->isDebug();
+  std::string filename = commandLine->getFilename();
+  std::string optionsFilename = commandLine->getOptionsFilename();
 
   std::unique_ptr<VideoReader> videoReader(new VideoReaderImpl());
   if(!videoReader->openFile(filename)) {
@@ -48,7 +44,7 @@ int main(int argc, char *argv[]) {
   }
 
   std::unique_ptr<FrameComparator> comparator(new FrameComparatorImpl());
-  comparator->setOptions(options);
+  comparator->setOptionsFilename(optionsFilename);
 
   std::unique_ptr<SceneDetector> detector(new SceneDetectorImpl());
 
