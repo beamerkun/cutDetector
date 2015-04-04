@@ -1,29 +1,13 @@
-// TODO recheck if all includes are needed
 #include <iostream> // for standard I/O
 #include <string>   // for strings
-#include <iomanip>  // for controlling float print precision
-#include <sstream>  // string to number conversion
-#include <cstdio>
-#include <list>
-#include <algorithm>
-#include <utility>
-#include <vector>
 #include <memory>   // unique_ptr
-
-#include <tclap/CmdLine.h>
-
-#include <opencv2/core/core.hpp>        // Basic OpenCV structures (cv::Mat, Scalar)
-#include <opencv2/imgproc/imgproc.hpp>  // Gaussian Blur
-#include <opencv2/highgui/highgui.hpp>  // OpenCV window I/O
+#include <cstdio>   // printf
 
 #include <command_line_impl.hpp>
 #include <command_line_debug.hpp>
 #include <frame_comparator_impl.hpp>
 #include <scene_detector_impl.hpp>
 #include <video_reader_impl.hpp>
-
-using namespace std;
-using namespace cv;
 
 int main(int argc, char *argv[]) {
 

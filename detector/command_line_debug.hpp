@@ -3,7 +3,7 @@
 
 class CommandLineDebug : public SceneDetector::Observer {
   public:
-  CommandLineDebug() {};
+  CommandLineDebug() {}
   // Overridden from SceneDetector::Observer
   void OnSceneDetected(SceneDetector::Frame& lastFrame,
                        SceneDetector::Frame& currentFrame) override;

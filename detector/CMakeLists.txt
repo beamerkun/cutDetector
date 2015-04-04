@@ -1,1 +1,6 @@
-ADD_LIBRARY(detector SHARED frame_comparator_impl.cpp video_reader_impl.cpp command_line_impl.cpp scene_detector_impl.cpp command_line_debug.cpp)
+ADD_LIBRARY(detector SHARED
+   frame_comparator_impl.cpp frame_comparator_impl.hpp
+   video_reader_impl.cpp video_reader_impl.hpp
+   command_line_impl.cpp command_line_impl.hpp
+   scene_detector_impl.cpp scene_detector_impl.hpp
+   command_line_debug.cpp command_line_debug.hpp)

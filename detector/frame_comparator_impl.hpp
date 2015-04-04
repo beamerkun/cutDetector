@@ -8,7 +8,7 @@ using cv::Mat;
 
 class FrameComparatorImpl : public FrameComparator {
   public:
-    struct param {
+  struct param {
     double histogramThreshold = 0.7;
     bool limitRejects = false;
     int rejected = 5;

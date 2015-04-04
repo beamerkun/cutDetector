@@ -2,10 +2,13 @@
 
 #include <string>
 #include <sstream>  // string to number conversion
+#include <fstream>  // filestream
 #include <vector>
 
 #include <opencv2/core/core.hpp>        // Basic OpenCV structures
 #include <opencv2/imgproc/imgproc.hpp>  // Drawing rectangles
+
+#include <rapidjson/document.h>
 
 using namespace cv;
 
@@ -33,7 +36,40 @@ namespace {
 }
 
 void FrameComparatorImpl::setOptionsFilename(std::string optionsFilename) {
-    // TODO
+  using namespace rapidjson;
+  
+  std::vector<char> contents;
+  
+  std::ifstream file(optionsFilename);
+      
+  if(file) {
+      file.seekg(0, std::ios::end);
+      std::streampos length = file.tellg();
+      file.seekg(0, std::ios::beg);
+        
+      contents.reserve(length);
+      file.read(&contents[0], length);
+  }
+
+  Document config;
+  config.Parse(&contents[0]);
+
+  // TODO refactor out strings
+  if(config.HasMember("histogram_threshold")) {
+      parameters.histogramThreshold = config["histogram_treshold"].GetDouble();
+  }
+  if(config.HasMember("limit_rejects")) {
+      parameters.limitRejects = config["limit_rejects"].GetBool();
+  }
+  if(config.HasMember("rejected")) {
+      parameters.rejected = config["rejected"].GetInt();
+  }
+  if(config.HasMember("width_div")) {
+      parameters.rejected = config["width_div"].GetInt();
+  }
+  if(config.HasMember("height_div")) {
+      parameters.rejected = config["height_div"].GetInt();
+  }
 }
 
 bool FrameComparatorImpl::isDifferentScene(Mat& lastFrame, Mat& currentFrame, double* distance){
