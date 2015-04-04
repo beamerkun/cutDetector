@@ -7,6 +7,8 @@ find_package( Qt5Widgets )
 add_library( gui SHARED
              gui.cpp
              gui.hpp
+             opencv_image_widget.cpp
+             opencv_image_widget.h
              main_window.cpp
              main_window.h
              main_window.ui )
