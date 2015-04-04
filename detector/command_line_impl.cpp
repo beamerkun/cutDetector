@@ -7,11 +7,14 @@
 CommandLineImpl::CommandLineImpl()
     : cmdLine_(kProgramName, ' ', kProgramVersion) {
   filenameArg_.reset(new TCLAP::UnlabeledValueArg<std::string>(
-      kParameterFilenameName, kParameterFilenameDescription, true,
+      kParameterFilenameName, kParameterFilenameDescription, false,
       kParameterFilenameDefault, kParameterFilenameValue, cmdLine_));
   debugSwitch_.reset(
       new TCLAP::SwitchArg(kParameterDebugSwitch, kParameterDebugName,
                            kParameterDebugDescription, cmdLine_, false));
+  guiSwitch_.reset(
+      new TCLAP::SwitchArg(kParameterGuiSwitch, kParameterGuiName,
+                           kParameterGuiDescription, cmdLine_, false));
   optionsArg_.reset(new TCLAP::ValueArg<std::string>(
       kParameterOptionsFilenameSwitch, kParameterOptionsFilenameName,
       kParameterOptionsFilenameDescription, false,
@@ -32,6 +35,10 @@ bool CommandLineImpl::Init(int argc, char* argv[]) {
 
 bool CommandLineImpl::isDebug() {
   return debugSwitch_->getValue();
+}
+
+bool CommandLineImpl::isGui() {
+  return guiSwitch_->getValue();
 }
 
 std::string CommandLineImpl::getFilename() {

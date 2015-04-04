@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QApplication>
-
 namespace gui {
-extern bool startGraphicsInterface(int& argc, char* argv[]);
+extern void startGraphicsInterface(int& argc, char* argv[]);
 }

@@ -13,10 +13,13 @@
 int main(int argc, char* argv[]) {
   std::unique_ptr<CommandLine> commandLine(new CommandLineImpl());
 
-  gui::startGraphicsInterface(argc, argv);
-
   if (!commandLine->Init(argc, argv)) {
     return -1;
+  }
+
+  if (commandLine->isGui()) {
+    gui::startGraphicsInterface(argc, argv);
+    return 0;
   }
 
   bool debug = commandLine->isDebug();

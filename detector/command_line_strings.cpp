@@ -15,3 +15,7 @@ const char* kParameterOptionsFilenameDefault = "";
 const char* kParameterOptionsFilenameName = "options_file";
 const char* kParameterOptionsFilenameSwitch = "o";
 const char* kParameterOptionsFilenameValue = "file";
+const char* kParameterGuiDescription =
+    "launch application with graphical interface";
+const char* kParameterGuiName = "gui";
+const char* kParameterGuiSwitch = "i";

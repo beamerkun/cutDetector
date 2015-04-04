@@ -14,3 +14,6 @@ extern const char* kParameterOptionsFilenameDefault;
 extern const char* kParameterOptionsFilenameName;
 extern const char* kParameterOptionsFilenameSwitch;
 extern const char* kParameterOptionsFilenameValue;
+extern const char* kParameterGuiDescription;
+extern const char* kParameterGuiName;
+extern const char* kParameterGuiSwitch;
