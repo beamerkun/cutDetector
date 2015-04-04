@@ -9,6 +9,7 @@ const char* kParameterDebugName = "debug";
 const char* kParameterDebugSwitch = "g";
 const char* kParameterDebugDescription = "enable debug mode";
 const char* kParameterOptionsFilenameName = "options_file";
-const char* kParameterOptionsFilenameSwitch  = "o";
-const char* kParameterOptionsFilenameDescription = "path to file containing options for frame comparator";
+const char* kParameterOptionsFilenameSwitch = "o";
+const char* kParameterOptionsFilenameDescription =
+    "path to file containing options for frame comparator";
 const char* kParameterOptionsFilenameDefault = "";

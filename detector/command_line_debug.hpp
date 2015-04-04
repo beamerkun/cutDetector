@@ -3,7 +3,7 @@
 #include <scene_detector.h>
 
 class CommandLineDebug : public SceneDetector::Observer {
-  public:
+ public:
   CommandLineDebug() {}
   // Overridden from SceneDetector::Observer
   void OnSceneDetected(SceneDetector::Frame& lastFrame,

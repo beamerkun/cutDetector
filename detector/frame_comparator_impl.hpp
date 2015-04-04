@@ -1,13 +1,13 @@
 #pragma once
 
-#include <frame_comparator.h>    // filter interface
+#include <frame_comparator.h>  // filter interface
 
-#include <opencv2/core/core.hpp> // cv::Mat
+#include <opencv2/core/core.hpp>  // cv::Mat
 
 using cv::Mat;
 
 class FrameComparatorImpl : public FrameComparator {
-  public:
+ public:
   struct param {
     double histogramThreshold = 0.7;
     bool limitRejects = false;
@@ -18,8 +18,10 @@ class FrameComparatorImpl : public FrameComparator {
 
   // Overriden from FrameComparator
   void setOptionsFilename(std::string optionsFilename) override;
-  bool isDifferentScene(Mat& lastFrame, Mat& currentFrame, double* distance) override;
+  bool isDifferentScene(Mat& lastFrame,
+                        Mat& currentFrame,
+                        double* distance) override;
   double calculateFrameDistance(Mat& lastFrame, Mat& currentFrame) override;
 
   param parameters;
-}; // class FrameComparatorImpl
+};  // class FrameComparatorImpl

@@ -1,7 +1,7 @@
 #include <video_reader_impl.hpp>
 
 bool VideoReaderImpl::openFile(std::string& filename) {
-  if(videoFile_.open(filename)){
+  if (videoFile_.open(filename)) {
     filename_ = filename;
     return true;
   }
@@ -21,14 +21,14 @@ bool VideoReaderImpl::isOpen() {
 }
 
 bool VideoReaderImpl::getFrame(int frameIndex, cv::Mat& result) {
-  if(!isOpen() || frameIndex < 0 || frameIndex > getTotalFrameCount())
+  if (!isOpen() || frameIndex < 0 || frameIndex > getTotalFrameCount())
     return false;
   // We can't read frames backwards. Reopen file to start from beginning.
-  if(frameIndex < getCurrentFrameIndex()) {
+  if (frameIndex < getCurrentFrameIndex()) {
     openFile(filename_);
   }
   // Skip frames till we reach desired frameIndex.
-  while(getCurrentFrameIndex() != frameIndex) {
+  while (getCurrentFrameIndex() != frameIndex) {
     videoFile_.grab();
   }
   videoFile_.retrieve(result);
@@ -36,13 +36,13 @@ bool VideoReaderImpl::getFrame(int frameIndex, cv::Mat& result) {
 }
 
 int VideoReaderImpl::getTotalFrameCount() {
-  if(isOpen())
+  if (isOpen())
     return videoFile_.get(CV_CAP_PROP_FRAME_COUNT);
   return 0;
 }
 
 int VideoReaderImpl::getCurrentFrameIndex() {
-  if(isOpen())
+  if (isOpen())
     return videoFile_.get(CV_CAP_PROP_POS_FRAMES);
   return 0;
 }
@@ -54,4 +54,3 @@ int VideoReaderImpl::getFrameHeight() {
 int VideoReaderImpl::getFrameWidth() {
   return isOpen() ? videoFile_.get(CV_CAP_PROP_FRAME_WIDTH) : 0;
 }
-

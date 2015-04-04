@@ -1,12 +1,14 @@
 #pragma once
 
-#include <opencv2/core/core.hpp>        // Basic OpenCV structures (cv::Mat, Scalar)
+#include <opencv2/core/core.hpp>  // Basic OpenCV structures (cv::Mat, Scalar)
 
 using cv::Mat;
 
 class FrameComparator {
-  public:
+ public:
   virtual void setOptionsFilename(std::string optionsFilename) {}
   virtual double calculateFrameDistance(Mat& lastFrame, Mat& currentFrame) = 0;
-  virtual bool isDifferentScene(Mat& lastFrame, Mat& currentFrame, double* distance) = 0;
-}; // FrameComparator
+  virtual bool isDifferentScene(Mat& lastFrame,
+                                Mat& currentFrame,
+                                double* distance) = 0;
+};  // FrameComparator
