@@ -1,14 +1,14 @@
 #include <frame_comparator_impl.hpp> // filter interface
 
 #include <string>
-#include <sstream>  // string to number conversion
 #include <fstream>  // filestream
 #include <vector>
 
 #include <opencv2/core/core.hpp>        // Basic OpenCV structures
 #include <opencv2/imgproc/imgproc.hpp>  // Drawing rectangles
+#include <rapidjson/document.h>         // JSON parsing
 
-#include <rapidjson/document.h>
+#include <frame_comparator_strings.hpp>
 
 using namespace cv;
 
@@ -54,37 +54,37 @@ void FrameComparatorImpl::setOptionsFilename(std::string optionsFilename) {
   Document config;
   config.Parse(&contents[0]);
 
-  // TODO refactor out strings
-  if(config.HasMember("histogram_threshold")) {
-      parameters.histogramThreshold = config["histogram_treshold"].GetDouble();
+  if(config.HasMember(kParameterHistogramThreshold)) {
+      parameters.histogramThreshold =
+          config[kParameterHistogramThreshold].GetDouble();
   }
-  if(config.HasMember("limit_rejects")) {
-      parameters.limitRejects = config["limit_rejects"].GetBool();
+  if(config.HasMember(kParameterLimitRejects)) {
+      parameters.limitRejects = config[kParameterLimitRejects].GetBool();
   }
-  if(config.HasMember("rejected")) {
-      parameters.rejected = config["rejected"].GetInt();
+  if(config.HasMember(kParameterRejected)) {
+      parameters.rejected = config[kParameterRejected].GetInt();
   }
-  if(config.HasMember("width_div")) {
-      parameters.rejected = config["width_div"].GetInt();
+  if(config.HasMember(kParameterWidthDiv)) {
+      parameters.rejected = config[kParameterWidthDiv].GetInt();
   }
-  if(config.HasMember("height_div")) {
-      parameters.rejected = config["height_div"].GetInt();
+  if(config.HasMember(kParameterHeightDiv)) {
+      parameters.rejected = config[kParameterHeightDiv].GetInt();
   }
 }
 
 bool FrameComparatorImpl::isDifferentScene(Mat& lastFrame, Mat& currentFrame, double* distance){
-  int WIDTH_DIV = parameters.widthDiv;
-  int HEIGHT_DIV = parameters.heightDiv;
-  int SUBSPACES = WIDTH_DIV * HEIGHT_DIV;
+  int widthDiv = parameters.widthDiv;
+  int heightDiv = parameters.heightDiv;
+  int subspaces = widthDiv * heightDiv;
   double histogramDistance;
 
   // Divide frames into HEIGHT_DIV*WIDTH_DIV segments.
   Mat result;
   Size frameSize = lastFrame.size();
-  int hDiv = frameSize.height / HEIGHT_DIV;
-  int wDiv = frameSize.width / WIDTH_DIV;
-  for( int h = 0; h < HEIGHT_DIV; ++h ){
-    for( int w = 0; w < WIDTH_DIV; ++w ){
+  int hDiv = frameSize.height / heightDiv;
+  int wDiv = frameSize.width / widthDiv;
+  for( int h = 0; h < heightDiv; ++h ){
+    for( int w = 0; w < widthDiv; ++w ){
       Rect region = Rect( w*wDiv, h*hDiv, wDiv, hDiv );
       Mat r1 = lastFrame(region);
       Mat r2 = currentFrame(region);
@@ -94,12 +94,17 @@ bool FrameComparatorImpl::isDifferentScene(Mat& lastFrame, Mat& currentFrame, do
 
   histogramDistance = 0;
   int count = 0;
+  int rejected = 0;
   double m = mean(result)[0];
-  for( int i = 0; i < SUBSPACES; ++i ){
+  for( int i = 0; i < subspaces; ++i ){
     double* ptr = result.ptr<double>(i); 
-    if (abs(*ptr - m) < 0.3*m) {
+    if (abs(*ptr - m) < 0.3*m ||
+        (parameters.limitRejects &&
+         parameters.rejected < rejected)) {
       histogramDistance += *ptr;
       count++;
+    } else {
+      rejected++;
     }
   }
   *distance = histogramDistance/count;
@@ -111,15 +116,16 @@ double FrameComparatorImpl::calculateFrameDistance(Mat& lastFrame, Mat& currentF
   Mat channelsLastFrame[3];
   Mat channelsCurrentFrame[3];
 
-  // podział klatki na 3 oddzielne kanały
+  // divide channels
   split(lastFrame   , channelsLastFrame);
   split(currentFrame  , channelsCurrentFrame);
 
-  ///////// OBLICZANIE HISTOGRAMU //////
-  // ilosc poziomow histogrami
+  /* Histogram calculation */
+
+  // Levels
   int bins = 80;
   int histSize[] = {bins};
-  // zakres wartosci jasnosci
+  // Brightness range
   float lranges[] = { 0, 60 };
   const float* ranges[] = { lranges };
   MatND histogramCurrent;
@@ -144,4 +150,3 @@ double FrameComparatorImpl::calculateFrameDistance(Mat& lastFrame, Mat& currentF
 
   return sum/3;
 }
-

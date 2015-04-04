@@ -12,4 +12,3 @@ void CommandLineDebug::OnDifferenceCalculated(SceneDetector::Frame& lastFrame,
                                               double difference) {
   printf("[%d;%d] difference %f\n", lastFrame.index_, currentFrame.index_, difference);
 }
-

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <frame_comparator.h> // filter interface
+#include <frame_comparator.h>    // filter interface
 
 #include <opencv2/core/core.hpp> // cv::Mat
 

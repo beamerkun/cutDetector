@@ -1,11 +1,11 @@
 #include <command_line_impl.hpp>
 
-#include <command_line_strings.hpp>
-
 #include <tclap/CmdLine.h>
 
+#include <command_line_strings.hpp>
+
 CommandLineImpl::CommandLineImpl() :
-  cmdLine_(kProgramName, ' ', kProgramVersion) {
+    cmdLine_(kProgramName, ' ', kProgramVersion) {
   filenameArg_.reset(new TCLAP::UnlabeledValueArg<std::string>(
                          kParameterFilenameName,
                          kParameterFilenameDescription,
@@ -51,4 +51,3 @@ std::string CommandLineImpl::getFilename() {
 std::string CommandLineImpl::getOptionsFilename() {
   return optionsArg_->getValue();
 }
-
