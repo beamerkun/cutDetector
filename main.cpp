@@ -8,9 +8,12 @@
 #include <frame_comparator_impl.hpp>
 #include <scene_detector_impl.hpp>
 #include <video_reader_impl.hpp>
+#include <gui/gui.hpp>
 
 int main(int argc, char* argv[]) {
   std::unique_ptr<CommandLine> commandLine(new CommandLineImpl());
+
+  gui::startGraphicsInterface(argc, argv);
 
   if (!commandLine->Init(argc, argv)) {
     return -1;
