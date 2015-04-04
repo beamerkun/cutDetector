@@ -14,31 +14,93 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2" stretch="10,1">
     <item>
-     <layout class="QVBoxLayout" name="videoArea">
-      <property name="sizeConstraint">
-       <enum>QLayout::SetDefaultConstraint</enum>
-      </property>
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,1">
       <item>
-       <layout class="QHBoxLayout" name="videoFrames"/>
-      </item>
-      <item>
-       <widget class="QSlider" name="horizontalSlider">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+       <layout class="QVBoxLayout" name="videoArea" stretch="0,0,0">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
         </property>
-       </widget>
+        <item>
+         <widget class="OpenCVImageWidget" name="widget" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <zorder>widget_2</zorder>
+         </widget>
+        </item>
+        <item>
+         <widget class="OpenCVImageWidget" name="widget_2" native="true"/>
+        </item>
+        <item>
+         <widget class="QSlider" name="horizontalSlider">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="toolbar"/>
+       <layout class="QVBoxLayout" name="sceneListArea">
+        <item>
+         <widget class="QListView" name="sceneListView">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="sceneListArea">
+     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetDefaultConstraint</enum>
+      </property>
       <item>
-       <widget class="QListView" name="sceneListView"/>
+       <widget class="QToolButton" name="toolButton_2">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="toolButton_3">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="toolButton">
+        <property name="text">
+         <string>...</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -62,6 +124,14 @@
    <addaction name="menuTest"/>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>OpenCVImageWidget</class>
+   <extends>QWidget</extends>
+   <header>opencv_image_widget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
