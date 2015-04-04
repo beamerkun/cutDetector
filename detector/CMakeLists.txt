@@ -1,4 +1,4 @@
-ADD_LIBRARY(detector SHARED
+add_library(detector SHARED
     command_line_debug.cpp
     command_line_debug.hpp
     command_line_impl.cpp

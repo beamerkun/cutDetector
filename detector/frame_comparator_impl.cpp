@@ -12,6 +12,7 @@
 
 using namespace cv;
 
+/*
 namespace {
 void colorSubspaces(FrameComparatorImpl::param param,
                     cv::Mat& frame1,
@@ -29,7 +30,7 @@ void colorSubspaces(FrameComparatorImpl::param param,
   for (int h = 0; h < HEIGHT_DIV; ++h) {
     for (int w = 0; w < WIDTH_DIV; ++w) {
       double* ptr = result.ptr<double>(h * WIDTH_DIV + w);
-      if (abs(*ptr - m) < 0.3 * m && false) {
+      if (std::abs(*ptr - m) < 0.3 * m && false) {
         Rect region = Rect(w * wDiv, h * hDiv, wDiv, hDiv);
         rectangle(frame1, region, Scalar(0, 0, 255, 0.3), CV_FILLED);
       }
@@ -37,6 +38,7 @@ void colorSubspaces(FrameComparatorImpl::param param,
   }
 }
 }
+*/
 
 void FrameComparatorImpl::setOptionsFilename(std::string optionsFilename) {
   using namespace rapidjson;
@@ -103,7 +105,7 @@ bool FrameComparatorImpl::isDifferentScene(Mat& lastFrame,
   double m = mean(result)[0];
   for (int i = 0; i < subspaces; ++i) {
     double* ptr = result.ptr<double>(i);
-    if (abs(*ptr - m) < 0.3 * m ||
+    if (std::abs(*ptr - m) < 0.3 * m ||
         (parameters.limitRejects && parameters.rejected < rejected)) {
       histogramDistance += *ptr;
       count++;

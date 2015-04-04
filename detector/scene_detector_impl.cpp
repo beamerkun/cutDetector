@@ -4,10 +4,10 @@
 
 sceneList SceneDetectorImpl::detectScenes(VideoReader* videoReader,
                                           FrameComparator* frameComparator) {
-  // TODO validate parameters
+  if(!videoReader->isOpen()) {
+    return sceneList();
+  }
 
-  cv::Size dimensions =
-      cv::Size(videoReader->getFrameWidth(), videoReader->getFrameHeight());
   cv::Mat currentFrame;
   cv::Mat lastFrame;
   sceneList scenes;
