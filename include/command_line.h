@@ -4,6 +4,8 @@
 
 class CommandLine {
  public:
+  virtual ~CommandLine() {}
+
   virtual bool Init(int argc, char* argv[]) = 0;
   virtual bool isDebug() = 0;
   virtual bool isGui() = 0;

@@ -1,7 +1,5 @@
 #include <command_line_impl.hpp>
 
-#include <tclap/CmdLine.h>
-
 #include <command_line_strings.hpp>
 
 CommandLineImpl::CommandLineImpl()

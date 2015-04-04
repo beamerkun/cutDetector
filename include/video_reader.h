@@ -8,6 +8,8 @@ using cv::Mat;
 
 class VideoReader {
  public:
+  virtual ~VideoReader() {}
+
   virtual bool openFile(std::string& filename) = 0;
   virtual void closeFile() = 0;
   virtual std::string getCurrentFilename() = 0;

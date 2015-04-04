@@ -37,20 +37,22 @@ bool VideoReaderImpl::getFrame(int frameIndex, cv::Mat& result) {
 
 int VideoReaderImpl::getTotalFrameCount() {
   if (isOpen())
-    return videoFile_.get(CV_CAP_PROP_FRAME_COUNT);
+    return static_cast<int>(videoFile_.get(CV_CAP_PROP_FRAME_COUNT));
   return 0;
 }
 
 int VideoReaderImpl::getCurrentFrameIndex() {
   if (isOpen())
-    return videoFile_.get(CV_CAP_PROP_POS_FRAMES);
+    return static_cast<int>(videoFile_.get(CV_CAP_PROP_POS_FRAMES));
   return 0;
 }
 
 int VideoReaderImpl::getFrameHeight() {
-  return isOpen() ? videoFile_.get(CV_CAP_PROP_FRAME_HEIGHT) : 0;
+  return isOpen() ? static_cast<int>(videoFile_.get(CV_CAP_PROP_FRAME_HEIGHT))
+                  : 0;
 }
 
 int VideoReaderImpl::getFrameWidth() {
-  return isOpen() ? videoFile_.get(CV_CAP_PROP_FRAME_WIDTH) : 0;
+  return isOpen() ? static_cast<int>(videoFile_.get(CV_CAP_PROP_FRAME_WIDTH))
+                  : 0;
 }

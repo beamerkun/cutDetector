@@ -9,6 +9,7 @@
 class CommandLineImpl : public CommandLine {
  public:
   CommandLineImpl();
+
   bool Init(int argc, char* argv[]) override;
   bool isDebug() override;
   bool isGui() override;

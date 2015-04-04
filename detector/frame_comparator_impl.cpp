@@ -52,7 +52,7 @@ void FrameComparatorImpl::setOptionsFilename(std::string optionsFilename) {
     std::streampos length = file.tellg();
     file.seekg(0, std::ios::beg);
 
-    contents.reserve(length);
+    contents.reserve(static_cast<unsigned long>(length));
     file.read(&contents[0], length);
   }
 

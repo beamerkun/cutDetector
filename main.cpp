@@ -33,7 +33,8 @@ int main(int argc, char* argv[]) {
   }
 
   std::unique_ptr<FrameComparator> comparator(new FrameComparatorImpl());
-  comparator->setOptionsFilename(optionsFilename);
+  if (!optionsFilename.empty())
+    comparator->setOptionsFilename(optionsFilename);
 
   std::unique_ptr<SceneDetector> detector(new SceneDetectorImpl());
 
