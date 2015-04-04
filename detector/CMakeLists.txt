@@ -1,4 +1,5 @@
 ADD_LIBRARY(detector SHARED
+   command_line_strings.cpp command_line_strings.hpp
    frame_comparator_impl.cpp frame_comparator_impl.hpp
    video_reader_impl.cpp video_reader_impl.hpp
    command_line_impl.cpp command_line_impl.hpp

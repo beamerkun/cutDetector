@@ -12,7 +12,7 @@ include_directories( ${OpenCV_INCLUDE_DIRS} include detector )
 
 add_subdirectory( detector )
 
-add_executable( cutDetector main.cpp 
+add_executable( cutDetector main.cpp
                 include/scene_detector.h
                 include/command_line.h
                 include/frame_comparator.h
