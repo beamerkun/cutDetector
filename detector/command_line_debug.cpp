@@ -2,8 +2,8 @@
 
 #include <cstdio>
 
-void CommandLineDebug::OnSceneDetected(SceneDetector::Frame& lastFrame,
-                                       SceneDetector::Frame& currentFrame) {
+void CommandLineDebug::OnCutDetected(SceneDetector::Frame& lastFrame,
+                                     SceneDetector::Frame& currentFrame) {
   printf("Scene! [%d;%d]\n", lastFrame.index_, currentFrame.index_);
 }
 

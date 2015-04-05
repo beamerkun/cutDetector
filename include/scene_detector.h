@@ -19,7 +19,7 @@ class SceneDetector {
    public:
     virtual ~Observer() {}
 
-    virtual void OnSceneDetected(Frame& last, Frame& first) = 0;
+    virtual void OnCutDetected(Frame& last, Frame& first) = 0;
     virtual void OnDifferenceCalculated(Frame& last,
                                         Frame& first,
                                         double difference) = 0;

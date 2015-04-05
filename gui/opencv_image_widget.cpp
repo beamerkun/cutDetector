@@ -27,7 +27,7 @@ void OpenCVImageWidget::showImage(const cv::Mat& image) {
   _qimage = QImage(_tmp.data, _tmp.cols, _tmp.rows, _tmp.cols * 3,
                    QImage::Format_RGB888);
 
-  this->setFixedSize(image.cols, image.rows);
+  //this->setFixedSize(image.cols, image.rows);
 
   repaint();
 }

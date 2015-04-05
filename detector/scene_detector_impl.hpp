@@ -14,10 +14,10 @@ class SceneDetectorImpl : public SceneDetector {
  private:
   std::vector<SceneDetector::Observer*> observers_;
 
-  void OnSceneDetected(cv::Mat& lastFrame,
-                       int lastFrameIndex,
-                       cv::Mat& firstFrame,
-                       int firstFrameIndex);
+  void OnCutDetected(cv::Mat& lastFrame,
+                     int lastFrameIndex,
+                     cv::Mat& firstFrame,
+                     int firstFrameIndex);
   void OnDifferenceCalculated(cv::Mat& lastFrame,
                               int lastFrameIndex,
                               cv::Mat& firstFrame,

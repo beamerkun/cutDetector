@@ -11,13 +11,15 @@ class CutDetectorQtInterface : public QObject, public SceneDetector::Observer {
   ~CutDetectorQtInterface();
 
   // Overriden from SceneDetector::Observer
-  void OnSceneDetected(SceneDetector::Frame& last,
-                       SceneDetector::Frame& first) override;
+  void OnCutDetected(SceneDetector::Frame& last,
+                     SceneDetector::Frame& first) override;
   void OnDifferenceCalculated(SceneDetector::Frame& last,
                               SceneDetector::Frame& first,
                               double difference) override;
 
  signals:
+  void showNewSceneFirstFrame(cv::Mat& frame);
+  void showPreviousSceneLastFrame(cv::Mat& frame);
 
  public slots:
 };

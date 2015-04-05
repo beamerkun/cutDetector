@@ -17,6 +17,12 @@ class main_window : public QMainWindow {
   main_window(QWidget* parent, CutDetector* detector);
   ~main_window();
 
+  void detectScenes();
+
+ signals:
+  void sceneDetectionStarted();
+  void sceneListGenerated(sceneList list);
+
  private:
   Ui::main_window* ui;
 

@@ -4,7 +4,7 @@
 
 sceneList SceneDetectorImpl::detectScenes(VideoReader* videoReader,
                                           FrameComparator* frameComparator) {
-  if(!videoReader->isOpen()) {
+  if (!videoReader->isOpen()) {
     return sceneList();
   }
 
@@ -42,7 +42,7 @@ sceneList SceneDetectorImpl::detectScenes(VideoReader* videoReader,
       int sceneEndIndex = lastFrameIndex + offset;
       scenes.push_back(std::make_pair(sceneStartIndex, sceneEndIndex));
       sceneStartIndex = sceneEndIndex + 1;
-      OnSceneDetected(lastFrame, sceneEndIndex, currentFrame, sceneStartIndex);
+      OnCutDetected(lastFrame, sceneEndIndex, currentFrame, sceneStartIndex);
     }
     OnDifferenceCalculated(lastFrame, lastFrameIndex + offset, currentFrame,
                            currentFrameIndex + offset, distance);
@@ -63,14 +63,14 @@ void SceneDetectorImpl::UnregisterObserver(SceneDetector::Observer* observer) {
                    observers_.end());
 }
 
-void SceneDetectorImpl::OnSceneDetected(cv::Mat& lastFrame,
-                                        int lastFrameIndex,
-                                        cv::Mat& firstFrame,
-                                        int firstFrameIndex) {
+void SceneDetectorImpl::OnCutDetected(cv::Mat& lastFrame,
+                                      int lastFrameIndex,
+                                      cv::Mat& firstFrame,
+                                      int firstFrameIndex) {
   SceneDetector::Frame last(lastFrame, lastFrameIndex);
   SceneDetector::Frame first(firstFrame, firstFrameIndex);
   for (auto observer : observers_) {
-    observer->OnSceneDetected(last, first);
+    observer->OnCutDetected(last, first);
   }
 }
 
