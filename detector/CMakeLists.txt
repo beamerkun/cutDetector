@@ -5,6 +5,8 @@ add_library(detector SHARED
     command_line_impl.hpp
     command_line_strings.cpp
     command_line_strings.hpp
+    cut_detector.hpp
+    cut_detector.cpp
     frame_comparator_impl.cpp
     frame_comparator_impl.hpp
     frame_comparator_strings.cpp

@@ -8,44 +8,28 @@
 #include <frame_comparator_impl.hpp>
 #include <scene_detector_impl.hpp>
 #include <video_reader_impl.hpp>
+#include <cut_detector.hpp>
 #include <gui/gui.hpp>
 
 int main(int argc, char* argv[]) {
-  std::unique_ptr<CommandLine> commandLine(new CommandLineImpl());
+  std::unique_ptr<CutDetector> detector(new CutDetector());
+
+  CommandLine* commandLine = detector->command_line();
 
   if (!commandLine->Init(argc, argv)) {
     return -1;
   }
 
   if (commandLine->isGui()) {
-    gui::startGraphicsInterface(argc, argv);
+    gui::startGraphicsInterface(argc, argv, detector.release());
     return 0;
   }
 
-  bool debug = commandLine->isDebug();
-  std::string filename = commandLine->getFilename();
-  std::string optionsFilename = commandLine->getOptionsFilename();
+  sceneList scenes = detector->detectScenes();
 
-  std::unique_ptr<VideoReader> videoReader(new VideoReaderImpl());
-  if (!videoReader->openFile(filename)) {
-    std::cerr << "failed to open file " << filename << std::endl;
+  // Every video should contain at least one scene, something went wrong.
+  if (scenes.empty())
     return -1;
-  }
-
-  std::unique_ptr<FrameComparator> comparator(new FrameComparatorImpl());
-  if (!optionsFilename.empty())
-    comparator->setOptionsFilename(optionsFilename);
-
-  std::unique_ptr<SceneDetector> detector(new SceneDetectorImpl());
-
-  std::unique_ptr<CommandLineDebug> cl_debug;
-  if (debug) {
-    cl_debug.reset(new CommandLineDebug());
-    detector->RegisterObserver(cl_debug.get());
-  }
-
-  sceneList scenes =
-      detector->detectScenes(videoReader.get(), comparator.get());
 
   for (auto scene : scenes) {
     printf("[%d;%d]\n", scene.first, scene.second);
