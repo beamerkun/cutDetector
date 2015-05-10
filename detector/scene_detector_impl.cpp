@@ -1,6 +1,11 @@
 #include <scene_detector_impl.hpp>
 
 #include <algorithm>  // std::make_pair
+#ifdef WIN32
+#include <windows.h> // sleep
+#else
+#include <unistd.h> // usleep
+#endif // win32
 
 sceneList SceneDetectorImpl::detectScenes(VideoReader* videoReader,
                                           FrameComparator* frameComparator) {
@@ -43,6 +48,11 @@ sceneList SceneDetectorImpl::detectScenes(VideoReader* videoReader,
       scenes.push_back(std::make_pair(sceneStartIndex, sceneEndIndex));
       sceneStartIndex = sceneEndIndex + 1;
       OnCutDetected(lastFrame, sceneEndIndex, currentFrame, sceneStartIndex);
+#ifdef WIN32
+      Sleep(wait_time_msecs_);
+#else
+      usleep(wait_time_msecs_ * 1000);
+#endif // win32
     }
     OnDifferenceCalculated(lastFrame, lastFrameIndex + offset, currentFrame,
                            currentFrameIndex + offset, distance);
@@ -52,6 +62,10 @@ sceneList SceneDetectorImpl::detectScenes(VideoReader* videoReader,
   scenes.push_back(std::make_pair(sceneStartIndex, sceneEndIndex));
 
   return scenes;
+}
+
+void SceneDetectorImpl::setWaitTime(int miliseconds) {
+  wait_time_msecs_ = miliseconds;
 }
 
 void SceneDetectorImpl::RegisterObserver(SceneDetector::Observer* observer) {

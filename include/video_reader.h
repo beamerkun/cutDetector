@@ -8,6 +8,15 @@ using cv::Mat;
 
 class VideoReader {
  public:
+  class Observer {
+   public:
+    virtual ~Observer() {}
+
+    virtual void onCurrentFrameChanged(Mat& currentFrame, int index) = 0;
+    virtual void onFileOpened(std::string filename) = 0;
+    virtual void onFileClosed() = 0;
+  };
+
   virtual ~VideoReader() {}
 
   virtual bool openFile(std::string& filename) = 0;
@@ -27,4 +36,6 @@ class VideoReader {
   virtual int getFrameWidth() = 0;
   virtual int getFrameHeight() = 0;
 
+  virtual void RegisterObserver(Observer* observer) = 0;
+  virtual void UnregisterObserver(Observer* observer) = 0;
 };  // VideoReader

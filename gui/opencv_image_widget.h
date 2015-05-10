@@ -19,10 +19,14 @@ class OpenCVImageWidget : public QWidget {
   QSize minimumSizeHint() const { return _qimage.size(); }
 
  public slots:
-  void showImage(const cv::Mat& image);
+  void showImage(const cv::Mat image);
 
  protected:
   void paintEvent(QPaintEvent* event);
+  void resizeEvent(QResizeEvent* event);
+
+ private:
+  void convertMat();
 
   QImage _qimage;
   cv::Mat _tmp;

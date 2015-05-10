@@ -27,6 +27,7 @@ class SceneDetector {
 
   virtual sceneList detectScenes(VideoReader* videoReader,
                                  FrameComparator* frameComparator) = 0;
+  virtual void setWaitTime(int miliseconds) = 0;
 
   virtual void RegisterObserver(Observer* observer) = 0;
   virtual void UnregisterObserver(Observer* observer) = 0;

@@ -2,6 +2,7 @@
 #define MAIN_WINDOW_H
 
 #include <QMainWindow>
+#include <QThread>
 
 #include <cut_detector.hpp>
 #include <cut_detector_qt_interface.h>
@@ -17,14 +18,10 @@ class main_window : public QMainWindow {
   main_window(QWidget* parent, CutDetector* detector);
   ~main_window();
 
-  void detectScenes();
-
- signals:
-  void sceneDetectionStarted();
-  void sceneListGenerated(sceneList list);
-
  private:
   Ui::main_window* ui;
+
+  QThread worker_thread_;
 
   std::unique_ptr<CutDetector> detector_;
   CutDetectorQtInterface interface_;

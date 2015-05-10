@@ -16,11 +16,18 @@ class VideoReaderImpl : public VideoReader {
   int getCurrentFrameIndex() override;
   int getFrameHeight() override;
   int getFrameWidth() override;
+  void RegisterObserver(Observer* observer) override;
+  void UnregisterObserver(Observer* observer) override;
 
  private:
+  void OnCurrentVideoFrameChanged(cv::Mat& frame, int index);
+
   // Currently opened file.
   cv::VideoCapture videoFile_;
 
   // Currently opened file filename.
   std::string filename_;
+
+  // Observer list.
+  std::vector<VideoReader::Observer*> observers_;
 };  // VideoReader

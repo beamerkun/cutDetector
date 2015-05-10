@@ -32,6 +32,7 @@ bool VideoReaderImpl::getFrame(int frameIndex, cv::Mat& result) {
     videoFile_.grab();
   }
   videoFile_.retrieve(result);
+  OnCurrentVideoFrameChanged(result, frameIndex);
   return true;
 }
 
@@ -55,4 +56,19 @@ int VideoReaderImpl::getFrameHeight() {
 int VideoReaderImpl::getFrameWidth() {
   return isOpen() ? static_cast<int>(videoFile_.get(CV_CAP_PROP_FRAME_WIDTH))
                   : 0;
+}
+
+void VideoReaderImpl::OnCurrentVideoFrameChanged(Mat& frame, int index) {
+  for (auto observer : observers_) {
+    observer->onCurrentFrameChanged(frame, index);
+  }
+}
+
+void VideoReaderImpl::RegisterObserver(VideoReader::Observer* observer) {
+  observers_.push_back(observer);
+}
+
+void VideoReaderImpl::UnregisterObserver(VideoReader::Observer* observer) {
+  observers_.erase(std::remove(observers_.begin(), observers_.end(), observer),
+                   observers_.end());
 }

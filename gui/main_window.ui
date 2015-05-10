@@ -25,7 +25,7 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2" stretch="10,1">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,1">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,1">
       <item>
        <layout class="QVBoxLayout" name="videoArea" stretch="0,0,0">
         <property name="sizeConstraint">
@@ -42,23 +42,33 @@
          </widget>
         </item>
         <item>
-         <widget class="OpenCVImageWidget" name="widget_2" native="true">
-          <zorder>widget</zorder>
-         </widget>
+         <widget class="OpenCVImageWidget" name="widget_2" native="true"/>
         </item>
         <item>
-         <widget class="QSlider" name="horizontalSlider">
+         <widget class="QSlider" name="playbackSlider">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="value">
+           <number>99</number>
+          </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="invertedAppearance">
+           <bool>false</bool>
+          </property>
+          <property name="invertedControls">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
        </layout>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="sceneListArea">
+       <layout class="QVBoxLayout" name="sceneListArea" stretch="1,0">
         <item>
-         <widget class="QListWidget" name="sceneListWidget">
+         <widget class="QTableWidget" name="sceneTableWidget">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -71,40 +81,116 @@
             <height>16777215</height>
            </size>
           </property>
+          <property name="gridStyle">
+           <enum>Qt::NoPen</enum>
+          </property>
+          <property name="columnCount">
+           <number>2</number>
+          </property>
+          <attribute name="horizontalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
+          <attribute name="horizontalHeaderDefaultSectionSize">
+           <number>50</number>
+          </attribute>
+          <attribute name="verticalHeaderVisible">
+           <bool>false</bool>
+          </attribute>
+          <attribute name="verticalHeaderDefaultSectionSize">
+           <number>18</number>
+          </attribute>
+          <column/>
+          <column/>
          </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="listControls">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMaximumSize</enum>
+          </property>
+          <item>
+           <widget class="QToolButton" name="loadListButton">
+            <property name="text">
+             <string>Load</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="saveListButton">
+            <property name="text">
+             <string>Save</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="clearListButton">
+            <property name="text">
+             <string>Clear</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="addRowButton">
+            <property name="text">
+             <string>+</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QToolButton" name="deleteRowButton">
+            <property name="text">
+             <string>-</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0,0">
+     <layout class="QHBoxLayout" name="playbackControls" stretch="0,0,0,0,0,0,0">
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
       <item>
-       <widget class="QToolButton" name="toolButton_2">
+       <widget class="QToolButton" name="rewindButton">
         <property name="text">
-         <string>...</string>
+         <string>|&lt;</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="toolButton_3">
+       <widget class="QToolButton" name="stepBackButton">
         <property name="text">
-         <string>...</string>
+         <string>&lt;|</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QToolButton" name="toolButton">
+       <widget class="QToolButton" name="startButton">
         <property name="text">
-         <string>...</string>
+         <string>Start</string>
         </property>
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer">
+       <widget class="QToolButton" name="stepForwardButton">
+        <property name="text">
+         <string>|&gt;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="endButton">
+        <property name="text">
+         <string>&gt;|</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="playbackControlsSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -115,6 +201,13 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QToolButton" name="detectorSettingsButton">
+        <property name="text">
+         <string>Detector Settings</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -130,7 +223,62 @@
      <height>19</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen_file"/>
+    <addaction name="actionClose_file"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuCuts">
+    <property name="title">
+     <string>Cuts</string>
+    </property>
+    <addaction name="actionOpen_cuts_list"/>
+    <addaction name="actionClose_cuts_list"/>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuCuts"/>
+   <addaction name="menuAbout"/>
   </widget>
+  <action name="actionOpen_file">
+   <property name="text">
+    <string>Open file...</string>
+   </property>
+  </action>
+  <action name="actionClose_file">
+   <property name="text">
+    <string>Close file</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionOpen_cuts_list">
+   <property name="text">
+    <string>Open cuts list...</string>
+   </property>
+  </action>
+  <action name="actionClose_cuts_list">
+   <property name="text">
+    <string>Close cuts list...</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
