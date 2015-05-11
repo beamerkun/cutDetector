@@ -2,6 +2,8 @@
 
 #include "cut_detector.hpp"
 
+#include <iostream>
+
 CutDetectorQtInterface::CutDetectorQtInterface(QObject* parent)
     : QObject(parent), detector_(nullptr) {
 }
@@ -28,13 +30,23 @@ void CutDetectorQtInterface::OnDifferenceCalculated(
 void CutDetectorQtInterface::onCurrentFrameChanged(Mat& currentFrame,
                                                    int index) {
   emit showCurrentFrame(currentFrame.clone());
-  emit changeCurrentFrameIndex(index, detector_->video_reader()->getTotalFrameCount());
+  emit changeCurrentFrameIndex(index,
+                               detector_->video_reader()->getTotalFrameCount());
 }
 
 void CutDetectorQtInterface::onFileOpened(std::string /* filename */) {
+  emit fileOpened();
 }
 
 void CutDetectorQtInterface::onFileClosed() {
+  emit fileClosed();
+}
+
+void CutDetectorQtInterface::openVideoFile(QWidget* parent) {
+  QString filename =
+      QFileDialog::getOpenFileName(parent, tr("Open video file..."));
+  if(!filename.isEmpty())
+    detector_->video_reader()->openFile(filename.toStdString());
 }
 
 void CutDetectorQtInterface::detectScenes() {

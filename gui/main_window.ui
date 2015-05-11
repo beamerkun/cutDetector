@@ -32,7 +32,7 @@
          <enum>QLayout::SetDefaultConstraint</enum>
         </property>
         <item>
-         <widget class="OpenCVImageWidget" name="widget" native="true">
+         <widget class="OpenCVImageWidget" name="topOpenCVWidget" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -42,7 +42,7 @@
          </widget>
         </item>
         <item>
-         <widget class="OpenCVImageWidget" name="widget_2" native="true"/>
+         <widget class="OpenCVImageWidget" name="bottomOpenCVWidget" native="true"/>
         </item>
         <item>
          <widget class="QSlider" name="playbackSlider">
@@ -228,7 +228,6 @@
      <string>File</string>
     </property>
     <addaction name="actionOpen_file"/>
-    <addaction name="actionClose_file"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -238,6 +237,7 @@
     </property>
     <addaction name="actionOpen_cuts_list"/>
     <addaction name="actionClose_cuts_list"/>
+    <addaction name="actionClear_cuts_list"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -252,6 +252,9 @@
   <action name="actionOpen_file">
    <property name="text">
     <string>Open file...</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::ApplicationSpecificRole</enum>
    </property>
   </action>
   <action name="actionClose_file">
@@ -271,12 +274,17 @@
   </action>
   <action name="actionClose_cuts_list">
    <property name="text">
-    <string>Close cuts list...</string>
+    <string>Save cuts list</string>
    </property>
   </action>
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionClear_cuts_list">
+   <property name="text">
+    <string>Clear cuts list</string>
    </property>
   </action>
  </widget>
@@ -289,5 +297,22 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>main_window</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>185</x>
+     <y>429</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>319</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

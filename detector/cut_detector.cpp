@@ -18,7 +18,7 @@ sceneList CutDetector::detectScenes() {
   std::string filename = command_line_->getFilename();
   std::string optionsFilename = command_line_->getOptionsFilename();
 
-  if (!video_reader_->openFile(filename)) {
+  if (!video_reader_->isOpen() && !video_reader_->openFile(filename)) {
     std::cerr << "failed to open file " << filename << std::endl;
     return sceneList();
   }

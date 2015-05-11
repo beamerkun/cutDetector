@@ -18,7 +18,12 @@ class main_window : public QMainWindow {
   main_window(QWidget* parent, CutDetector* detector);
   ~main_window();
 
+ public slots:
+  void clearScenesList();
+
  private:
+  void setupSignals();
+
   Ui::main_window* ui;
 
   QThread worker_thread_;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QFileDialog>
 
 #include <scene_detector_impl.hpp>
 
@@ -26,9 +27,13 @@ class CutDetectorQtInterface : public QObject,
   void onFileOpened(std::string filename) override;
   void onFileClosed() override;
 
+  void openVideoFile(QWidget* parent);
+
   void set_detector(CutDetector* detector) { detector_ = detector; }
 
  signals:
+  void fileOpened();
+  void fileClosed();
   void changeCurrentFrameIndex(int index, int frameCount);
   void sceneDetectionStarted();
   void sceneListGenerated(sceneList list);

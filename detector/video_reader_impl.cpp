@@ -1,6 +1,6 @@
 #include <video_reader_impl.hpp>
 
-bool VideoReaderImpl::openFile(std::string& filename) {
+bool VideoReaderImpl::openFile(std::string filename) {
   if (videoFile_.open(filename)) {
     filename_ = filename;
     return true;

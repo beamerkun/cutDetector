@@ -7,7 +7,7 @@
 class VideoReaderImpl : public VideoReader {
  public:
   // Overridden from VideoReader
-  bool openFile(std::string& filename) override;
+  bool openFile(std::string filename) override;
   void closeFile() override;
   std::string getCurrentFilename() override;
   bool isOpen() override;

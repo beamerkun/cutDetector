@@ -19,7 +19,7 @@ class VideoReader {
 
   virtual ~VideoReader() {}
 
-  virtual bool openFile(std::string& filename) = 0;
+  virtual bool openFile(std::string filename) = 0;
   virtual void closeFile() = 0;
   virtual std::string getCurrentFilename() = 0;
   virtual bool isOpen() = 0;
