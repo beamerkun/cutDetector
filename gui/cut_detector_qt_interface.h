@@ -29,6 +29,9 @@ class CutDetectorQtInterface : public QObject,
 
   void openVideoFile(QWidget* parent);
 
+  QList<QString> openCutsFile(QWidget* parent);
+  void saveCutsFile(QWidget* parent, QList<QString> cuts);
+
   void set_detector(CutDetector* detector) { detector_ = detector; }
 
  signals:
@@ -44,7 +47,13 @@ class CutDetectorQtInterface : public QObject,
  public slots:
   void detectScenes();
   void changeWaitTime(int msecs);
+  void rewindVideo();
+  void fastforwardVideo();
+  void stepVideoForward();
+  void stepVideoBackward();
 
  private:
+  void putFrameIndex(cv::Mat& frame, int index);
+
   CutDetector* detector_;
 };

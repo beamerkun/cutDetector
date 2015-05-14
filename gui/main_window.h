@@ -23,6 +23,8 @@ class main_window : public QMainWindow {
 
  private:
   void setupSignals();
+  QList<QString> generateSceneList();
+  void loadSceneList();
 
   Ui::main_window* ui;
 

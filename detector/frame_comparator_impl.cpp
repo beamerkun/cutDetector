@@ -1,7 +1,8 @@
 #include <frame_comparator_impl.hpp>  // filter interface
 
-#include <string>
+#include <iostream>
 #include <fstream>  // filestream
+#include <string>
 #include <vector>
 
 #include <opencv2/core/core.hpp>        // Basic OpenCV structures
@@ -70,10 +71,10 @@ void FrameComparatorImpl::setOptionsFilename(std::string optionsFilename) {
     parameters.rejected = config[kParameterRejected].GetInt();
   }
   if (config.HasMember(kParameterWidthDiv)) {
-    parameters.rejected = config[kParameterWidthDiv].GetInt();
+    parameters.widthDiv = config[kParameterWidthDiv].GetInt();
   }
   if (config.HasMember(kParameterHeightDiv)) {
-    parameters.rejected = config[kParameterHeightDiv].GetInt();
+    parameters.heightDiv = config[kParameterHeightDiv].GetInt();
   }
 }
 

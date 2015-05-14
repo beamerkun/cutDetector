@@ -23,5 +23,6 @@ class FrameComparatorImpl : public FrameComparator {
                         double* distance) override;
   double calculateFrameDistance(Mat& lastFrame, Mat& currentFrame) override;
 
+ private:
   param parameters;
 };  // class FrameComparatorImpl

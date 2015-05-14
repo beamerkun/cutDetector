@@ -3,6 +3,7 @@
 #include "cut_detector.hpp"
 
 #include <iostream>
+#include <QTextStream>
 
 CutDetectorQtInterface::CutDetectorQtInterface(QObject* parent)
     : QObject(parent), detector_(nullptr) {
@@ -17,8 +18,11 @@ void CutDetectorQtInterface::OnCutDetected(SceneDetector::Frame& last,
   last.frame_.copyTo(last_with_no);
   first.frame_.copyTo(first_with_no);
 
-  emit showNewSceneFirstFrame(first_with_no);
+  putFrameIndex(last_with_no, last.index_);
+  putFrameIndex(first_with_no, first.index_);
+
   emit showPreviousSceneLastFrame(last_with_no);
+  emit showNewSceneFirstFrame(first_with_no);
 }
 
 void CutDetectorQtInterface::OnDifferenceCalculated(
@@ -29,7 +33,9 @@ void CutDetectorQtInterface::OnDifferenceCalculated(
 
 void CutDetectorQtInterface::onCurrentFrameChanged(Mat& currentFrame,
                                                    int index) {
-  emit showCurrentFrame(currentFrame.clone());
+  cv::Mat copy = currentFrame.clone();
+  putFrameIndex(copy, index);
+  emit showCurrentFrame(copy);
   emit changeCurrentFrameIndex(index,
                                detector_->video_reader()->getTotalFrameCount());
 }
@@ -45,8 +51,47 @@ void CutDetectorQtInterface::onFileClosed() {
 void CutDetectorQtInterface::openVideoFile(QWidget* parent) {
   QString filename =
       QFileDialog::getOpenFileName(parent, tr("Open video file..."));
-  if(!filename.isEmpty())
+  if (!filename.isEmpty())
     detector_->video_reader()->openFile(filename.toStdString());
+}
+
+QList<QString> CutDetectorQtInterface::openCutsFile(QWidget* parent) {
+  QString filename =
+      QFileDialog::getOpenFileName(parent, tr("Open cuts file..."));
+  QFile file(filename);
+
+  if (!file.open(QIODevice::ReadOnly))
+    return QList<QString>();
+
+  QTextStream stream(&file);
+  QList<QString> result;
+
+  while (true) {
+    QString line = stream.readLine();
+
+    if (line.isNull())
+      break;
+
+    result.push_back(line);
+  }
+  file.close();
+  return result;
+}
+
+void CutDetectorQtInterface::saveCutsFile(QWidget* parent,
+                                          QList<QString> cuts) {
+  QString filename =
+      QFileDialog::getSaveFileName(parent, tr("Choose cuts filename..."));
+  QFile file(filename);
+
+  if (!file.open(QIODevice::WriteOnly))
+    return;
+
+  QTextStream stream(&file);
+  for (auto line : cuts) {
+    stream << line << '\n';
+  }
+  file.close();
 }
 
 void CutDetectorQtInterface::detectScenes() {
@@ -57,4 +102,33 @@ void CutDetectorQtInterface::detectScenes() {
 
 void CutDetectorQtInterface::changeWaitTime(int msecs) {
   detector_->scene_detector()->setWaitTime(msecs);
+}
+
+void CutDetectorQtInterface::rewindVideo() {
+  cv::Mat temp;
+  detector_->video_reader()->getFrame(0, temp);
+}
+
+void CutDetectorQtInterface::fastforwardVideo() {
+  cv::Mat temp;
+  detector_->video_reader()->getFrame(
+      detector_->video_reader()->getTotalFrameCount() - 1, temp);
+}
+
+void CutDetectorQtInterface::stepVideoForward() {
+  cv::Mat temp;
+  detector_->video_reader()->getFrame(
+      detector_->video_reader()->getCurrentFrameIndex() + 1, temp);
+}
+
+void CutDetectorQtInterface::stepVideoBackward() {
+  cv::Mat temp;
+  detector_->video_reader()->getFrame(
+      detector_->video_reader()->getCurrentFrameIndex() - 1, temp);
+}
+
+void CutDetectorQtInterface::putFrameIndex(cv::Mat& frame, int index) {
+  cv::Point point(100, frame.rows / 3);
+  cv::putText(frame, std::to_string(index), point, cv::FONT_HERSHEY_PLAIN, 5.0f,
+              cv::Scalar::all(255), 5);
 }

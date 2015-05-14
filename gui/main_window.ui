@@ -27,7 +27,7 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,1">
       <item>
-       <layout class="QVBoxLayout" name="videoArea" stretch="0,0,0">
+       <layout class="QVBoxLayout" name="videoArea" stretch="1,1,0">
         <property name="sizeConstraint">
          <enum>QLayout::SetDefaultConstraint</enum>
         </property>
@@ -99,8 +99,16 @@
           <attribute name="verticalHeaderDefaultSectionSize">
            <number>18</number>
           </attribute>
-          <column/>
-          <column/>
+          <column>
+           <property name="text">
+            <string>Start</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>End</string>
+           </property>
+          </column>
          </widget>
         </item>
         <item>
@@ -305,8 +313,8 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>185</x>
-     <y>429</y>
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
      <x>319</x>

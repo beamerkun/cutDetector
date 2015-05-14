@@ -59,12 +59,63 @@ void main_window::setupSignals() {
       });
   QObject::connect(ui->actionOpen_file, &QAction::triggered,
                    [=]() { interface_.openVideoFile(this); });
+  QObject::connect(ui->stepForwardButton, &QAbstractButton::clicked,
+                   &interface_, &CutDetectorQtInterface::stepVideoForward);
+  QObject::connect(ui->stepBackButton, &QAbstractButton::clicked, &interface_,
+                   &CutDetectorQtInterface::stepVideoBackward);
+  QObject::connect(ui->rewindButton, &QAbstractButton::clicked, &interface_,
+                   &CutDetectorQtInterface::rewindVideo);
 
   // Scene list controls
   QObject::connect(ui->actionClear_cuts_list, &QAction::triggered, this,
                    &main_window::clearScenesList);
   QObject::connect(ui->clearListButton, &QAbstractButton::clicked, this,
                    &main_window::clearScenesList);
+  QObject::connect(ui->loadListButton, &QAbstractButton::clicked, this,
+                   &main_window::loadSceneList);
+  QObject::connect(ui->saveListButton, &QAbstractButton::clicked, [=]() {
+    interface_.saveCutsFile(this, generateSceneList());
+  });
+  QObject::connect(ui->addRowButton, &QAbstractButton::clicked, [=]() {
+    ui->sceneTableWidget->setRowCount(ui->sceneTableWidget->rowCount() + 1);
+  });
+  QObject::connect(ui->deleteRowButton, &QAbstractButton::clicked, [=]() {
+    ui->sceneTableWidget->setRowCount(ui->sceneTableWidget->rowCount() - 1);
+  });
+}
+
+QList<QString> main_window::generateSceneList() {
+  QList<QString> result;
+  for (int i = 0; i < ui->sceneTableWidget->rowCount(); ++i) {
+    QString temp = "[";
+    for (int j = 0; j < ui->sceneTableWidget->columnCount(); ++j) {
+      if (j != 0)
+        temp += ";";
+
+      temp += ui->sceneTableWidget->item(i, j)->text();
+    }
+    result.push_back(temp + "]");
+  }
+  return result;
+}
+
+void main_window::loadSceneList() {
+  QList<QString> list = interface_.openCutsFile(this);
+
+  ui->sceneTableWidget->setRowCount(0);
+  for (QString scene : list) {
+    scene.remove(QChar('['));
+    scene.remove(QChar(']'));
+    auto cells = scene.split(";");
+    int row = ui->sceneTableWidget->rowCount();
+    ui->sceneTableWidget->setRowCount(row + 1);
+    int col = 0;
+    for (QString cell : cells) {
+      auto item = new QTableWidgetItem(cell);
+      ui->sceneTableWidget->setItem(row, col, item);
+      ++col;
+    }
+  }
 }
 
 void main_window::clearScenesList() {
