@@ -1,6 +1,5 @@
 #include <frame_comparator_impl.hpp>  // filter interface
 
-#include <iostream>
 #include <fstream>  // filestream
 #include <string>
 #include <vector>

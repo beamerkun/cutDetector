@@ -65,6 +65,8 @@ void main_window::setupSignals() {
                    &CutDetectorQtInterface::stepVideoBackward);
   QObject::connect(ui->rewindButton, &QAbstractButton::clicked, &interface_,
                    &CutDetectorQtInterface::rewindVideo);
+  QObject::connect(ui->endButton, &QAbstractButton::clicked, &interface_,
+                   &CutDetectorQtInterface::fastforwardVideo);
 
   // Scene list controls
   QObject::connect(ui->actionClear_cuts_list, &QAction::triggered, this,
