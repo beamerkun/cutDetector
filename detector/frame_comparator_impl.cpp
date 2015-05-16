@@ -7,6 +7,8 @@
 #include <opencv2/core/core.hpp>        // Basic OpenCV structures
 #include <opencv2/imgproc/imgproc.hpp>  // Drawing rectangles
 #include <rapidjson/document.h>         // JSON parsing
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 
 #include <frame_comparator_strings.hpp>
 
@@ -152,4 +154,26 @@ double FrameComparatorImpl::calculateFrameDistance(Mat& lastFrame,
   }
 
   return sum / 3;
+}
+
+std::string FrameComparatorImpl::getJsonFile() {
+  using namespace rapidjson;
+
+  StringBuffer buffer;
+  Writer<StringBuffer> writer(buffer);
+
+  writer.StartObject();
+  writer.Key(kParameterHistogramThreshold);
+  writer.Double(parameters.histogramThreshold);
+  writer.Key(kParameterLimitRejects);
+  writer.Bool(parameters.limitRejects);
+  writer.Key(kParameterRejected);
+  writer.Int(parameters.rejected);
+  writer.Key(kParameterWidthDiv);
+  writer.Int(parameters.widthDiv);
+  writer.Key(kParameterHeightDiv);
+  writer.Int(parameters.heightDiv);
+  writer.EndObject();
+
+  return std::string(buffer.GetString());
 }

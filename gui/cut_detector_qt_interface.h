@@ -32,6 +32,9 @@ class CutDetectorQtInterface : public QObject,
   QList<QString> openCutsFile(QWidget* parent);
   void saveCutsFile(QWidget* parent, QList<QString> cuts);
 
+  void openSettingsJsonFile(QWidget* parent);
+  void saveSettingsJsonFile(QWidget* parent);
+
   void set_detector(CutDetector* detector) { detector_ = detector; }
 
  signals:

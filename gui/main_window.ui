@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>CutDetector 1.0</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
@@ -158,7 +158,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="playbackControls" stretch="0,0,0,0,0,0,0">
+     <layout class="QHBoxLayout" name="playbackControls" stretch="0,0,0,0,0,0,0,0,0">
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
@@ -214,6 +214,20 @@
        <widget class="QToolButton" name="detectorSettingsButton">
         <property name="text">
          <string>Detector Settings</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="saveDetectorSettingsButton">
+        <property name="text">
+         <string>💾</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="loadDetectorSettingsButton">
+        <property name="text">
+         <string>📂</string>
         </property>
        </widget>
       </item>

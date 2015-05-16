@@ -14,15 +14,27 @@
 int main(int argc, char* argv[]) {
   std::unique_ptr<CutDetector> detector(new CutDetector());
 
-  CommandLine* commandLine = detector->command_line();
+  CommandLine* commandLine = new CommandLineImpl();
 
   if (!commandLine->Init(argc, argv)) {
     return -1;
   }
 
+  detector->video_reader()->openFile(commandLine->getFilename());
+
+  std::string optionsFilename = commandLine->getOptionsFilename();
+  if (!optionsFilename.empty())
+    detector->frame_comparator()->setOptionsFilename(optionsFilename);
+
   if (commandLine->isGui()) {
     gui::startGraphicsInterface(argc, argv, detector.release());
     return 0;
+  }
+
+  std::unique_ptr<CommandLineDebug> cl_debug;
+  if (commandLine->isDebug()) {
+    cl_debug.reset(new CommandLineDebug());
+    detector->scene_detector()->RegisterObserver(cl_debug.get());
   }
 
   sceneList scenes = detector->detectScenes();

@@ -5,6 +5,9 @@ find_package( Qt5Core )
 find_package( Qt5Widgets )
 
 add_library( gui SHARED
+             comparator_options_dialog.cpp
+             comparator_options_dialog.h
+             comparator_options_dialog.ui
              cut_detector_qt_interface.cpp
              cut_detector_qt_interface.h
              gui.cpp

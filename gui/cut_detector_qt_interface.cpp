@@ -5,6 +5,8 @@
 #include <iostream>
 #include <QTextStream>
 
+#include <frame_comparator_impl.hpp>
+
 CutDetectorQtInterface::CutDetectorQtInterface(QObject* parent)
     : QObject(parent), detector_(nullptr) {
 }
@@ -91,6 +93,30 @@ void CutDetectorQtInterface::saveCutsFile(QWidget* parent,
   for (auto line : cuts) {
     stream << line << '\n';
   }
+  file.close();
+}
+
+void CutDetectorQtInterface::openSettingsJsonFile(QWidget* parent) {
+  QString filename =
+      QFileDialog::getOpenFileName(parent, tr("Open settings json file..."));
+  if (!filename.isNull())
+    detector_->frame_comparator()->setOptionsFilename(filename.toStdString());
+}
+
+void CutDetectorQtInterface::saveSettingsJsonFile(QWidget* parent) {
+  QString filename =
+      QFileDialog::getSaveFileName(parent, tr("Save settings json file..."));
+  if (filename.isNull())
+    return;
+  std::string json = static_cast<FrameComparatorImpl*>(
+                         detector_->frame_comparator())->getJsonFile();
+
+  QFile file(filename);
+  if (!file.open(QIODevice::WriteOnly))
+    return;
+
+  QTextStream stream(&file);
+  stream << QString::fromStdString(json);
   file.close();
 }
 

@@ -23,6 +23,11 @@ class FrameComparatorImpl : public FrameComparator {
                         double* distance) override;
   double calculateFrameDistance(Mat& lastFrame, Mat& currentFrame) override;
 
+  param getParameters() const { return parameters; }
+  void setParameters(const param p) { parameters = p; }
+
+  std::string getJsonFile();
+
  private:
   param parameters;
 };  // class FrameComparatorImpl

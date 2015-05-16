@@ -4,7 +4,11 @@
 #include <scene_detector.h>
 
 main_window::main_window(QWidget* parent, CutDetector* detector)
-    : QMainWindow(parent), ui(new Ui::main_window) {
+    : QMainWindow(parent),
+      ui(new Ui::main_window),
+      comparator_options_dialog_(new ComparatorOptionsDialog(
+          this,
+          static_cast<FrameComparatorImpl*>(detector->frame_comparator()))) {
   detector_.reset(detector);
   detector_->scene_detector()->RegisterObserver(&interface_);
   detector_->video_reader()->RegisterObserver(&interface_);
@@ -21,6 +25,14 @@ main_window::main_window(QWidget* parent, CutDetector* detector)
 void main_window::setupSignals() {
   qRegisterMetaType<cv::Mat>("cv::Mat");
   qRegisterMetaType<QVector<int> >("QVector<int>");
+
+  // Detector settings signals
+  QObject::connect(ui->detectorSettingsButton, &QAbstractButton::clicked, this,
+                   &main_window::openComparatorSettingsDialog);
+  QObject::connect(ui->saveDetectorSettingsButton, &QAbstractButton::clicked,
+                   [=]() { interface_.saveSettingsJsonFile(this); });
+  QObject::connect(ui->loadDetectorSettingsButton, &QAbstractButton::clicked,
+                   [=]() { interface_.openSettingsJsonFile(this); });
 
   // OpenCVWidget signals
   QObject::connect(&interface_, &CutDetectorQtInterface::showCurrentFrame,
@@ -122,6 +134,10 @@ void main_window::loadSceneList() {
 
 void main_window::clearScenesList() {
   ui->sceneTableWidget->setRowCount(0);
+}
+
+void main_window::openComparatorSettingsDialog() {
+  comparator_options_dialog_->show();
 }
 
 main_window::~main_window() {

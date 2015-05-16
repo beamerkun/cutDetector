@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QThread>
 
+#include <comparator_options_dialog.h>
 #include <cut_detector.hpp>
 #include <cut_detector_qt_interface.h>
 
@@ -20,6 +21,7 @@ class main_window : public QMainWindow {
 
  public slots:
   void clearScenesList();
+  void openComparatorSettingsDialog();
 
  private:
   void setupSignals();
@@ -27,6 +29,8 @@ class main_window : public QMainWindow {
   void loadSceneList();
 
   Ui::main_window* ui;
+
+  ComparatorOptionsDialog* comparator_options_dialog_;
 
   QThread worker_thread_;
 
