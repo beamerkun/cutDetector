@@ -23,14 +23,8 @@ bool OpenCVVideoReader::isOpen() {
 bool OpenCVVideoReader::getFrame(int frameIndex, cv::Mat& result) {
   if (!isOpen() || frameIndex < 0 || frameIndex > getTotalFrameCount())
     return false;
-  // We can't read frames backwards. Reopen file to start from beginning.
-  if (frameIndex < getCurrentFrameIndex()) {
-    openFile(filename_);
-  }
-  // Skip frames till we reach desired frameIndex.
-  while (getCurrentFrameIndex() != frameIndex) {
-    videoFile_.grab();
-  }
+  if(frameIndex != getCurrentFrameIndex())
+    videoFile_.set(CV_CAP_PROP_POS_FRAMES, frameIndex);
   videoFile_.retrieve(result);
   OnCurrentVideoFrameChanged(result, frameIndex);
   return true;

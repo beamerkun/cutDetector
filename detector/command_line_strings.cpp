@@ -1,7 +1,7 @@
 #include <command_line_strings.hpp>
 
 const char* kProgramName = "cutDetector";
-const char* kProgramVersion = "1.0";
+const char* kProgramVersion = "1.0.1";
 const char* kParameterFilenameDescription = "path to video file";
 const char* kParameterFilenameDefault = "video.mp4";
 const char* kParameterFilenameName = "filename";
