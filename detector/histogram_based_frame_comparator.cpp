@@ -1,4 +1,4 @@
-#include <frame_comparator_impl.hpp>  // filter interface
+#include <histogram_based_frame_comparator.hpp>  // filter interface
 
 #include <fstream>  // filestream
 #include <string>

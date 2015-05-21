@@ -5,7 +5,7 @@
 #include <iostream>
 #include <QTextStream>
 
-#include <frame_comparator_impl.hpp>
+#include <histogram_based_frame_comparator.hpp>
 
 CutDetectorQtInterface::CutDetectorQtInterface(QObject* parent)
     : QObject(parent), detector_(nullptr) {

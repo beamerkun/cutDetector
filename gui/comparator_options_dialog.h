@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#include <frame_comparator_impl.hpp>
+#include <histogram_based_frame_comparator.hpp>
 
 namespace Ui {
 class ComparatorOptionsDialog;

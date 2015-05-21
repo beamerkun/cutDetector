@@ -5,9 +5,9 @@
 
 #include <command_line_impl.hpp>
 #include <command_line_debug.hpp>
-#include <frame_comparator_impl.hpp>
-#include <scene_detector_impl.hpp>
-#include <video_reader_impl.hpp>
+#include <histogram_based_frame_comparator.hpp>
+#include <adjacent_frames_scene_detector.hpp>
+#include <open_cv_video_reader.hpp>
 #include <cut_detector.hpp>
 #include <gui/gui.hpp>
 

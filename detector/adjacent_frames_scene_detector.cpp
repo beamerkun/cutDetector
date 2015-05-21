@@ -1,4 +1,4 @@
-#include <scene_detector_impl.hpp>
+#include <adjacent_frames_scene_detector.hpp>
 
 #include <algorithm>  // std::make_pair
 #ifdef WIN32

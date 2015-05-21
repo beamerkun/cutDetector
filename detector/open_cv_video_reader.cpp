@@ -1,4 +1,4 @@
-#include <video_reader_impl.hpp>
+#include <open_cv_video_reader.hpp>
 
 bool OpenCVVideoReader::openFile(std::string filename) {
   if (videoFile_.open(filename)) {

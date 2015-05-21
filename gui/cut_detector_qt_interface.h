@@ -3,7 +3,7 @@
 #include <QObject>
 #include <QFileDialog>
 
-#include <scene_detector_impl.hpp>
+#include <adjacent_frames_scene_detector.hpp>
 
 class CutDetector;
 
