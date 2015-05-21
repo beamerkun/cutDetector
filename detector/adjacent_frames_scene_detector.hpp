@@ -2,9 +2,9 @@
 
 #include <scene_detector.h>
 
-class SceneDetectorImpl : public SceneDetector {
+class AdjacentFramesSceneDetector : public SceneDetector {
  public:
-  SceneDetectorImpl() : wait_time_msecs_(0) {}
+  AdjacentFramesSceneDetector() : wait_time_msecs_(0) {}
 
   // Overriden from SceneDetector
   sceneList detectScenes(VideoReader* videoReader,
@@ -27,4 +27,4 @@ class SceneDetectorImpl : public SceneDetector {
                               cv::Mat& firstFrame,
                               int firstFrameIndex,
                               double distance);
-};  // SceneDetectorImpl
+};  // class AdjacentFramesSceneDetector

@@ -8,7 +8,7 @@ main_window::main_window(QWidget* parent, CutDetector* detector)
       ui(new Ui::main_window),
       comparator_options_dialog_(new ComparatorOptionsDialog(
           this,
-          static_cast<FrameComparatorImpl*>(detector->frame_comparator()))) {
+          static_cast<HistogramBasedFrameComparator*>(detector->frame_comparator()))) {
   detector_.reset(detector);
   detector_->scene_detector()->RegisterObserver(&interface_);
   detector_->video_reader()->RegisterObserver(&interface_);

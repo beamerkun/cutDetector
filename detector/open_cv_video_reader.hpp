@@ -4,7 +4,7 @@
 
 #include <opencv/highgui.h>  // VideoCapture
 
-class VideoReaderImpl : public VideoReader {
+class OpenCVVideoReader : public VideoReader {
  public:
   // Overridden from VideoReader
   bool openFile(std::string filename) override;
@@ -30,4 +30,4 @@ class VideoReaderImpl : public VideoReader {
 
   // Observer list.
   std::vector<VideoReader::Observer*> observers_;
-};  // VideoReader
+};  // OpenCVVideoReader

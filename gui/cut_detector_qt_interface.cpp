@@ -108,7 +108,7 @@ void CutDetectorQtInterface::saveSettingsJsonFile(QWidget* parent) {
       QFileDialog::getSaveFileName(parent, tr("Save settings json file..."));
   if (filename.isNull())
     return;
-  std::string json = static_cast<FrameComparatorImpl*>(
+  std::string json = static_cast<HistogramBasedFrameComparator*>(
                          detector_->frame_comparator())->getJsonFile();
 
   QFile file(filename);

@@ -7,9 +7,9 @@
 #include <video_reader_impl.hpp>
 
 CutDetector::CutDetector() {
-  frame_comparator_.reset(new FrameComparatorImpl());
-  scene_detector_.reset(new SceneDetectorImpl());
-  video_reader_.reset(new VideoReaderImpl());
+  frame_comparator_.reset(new HistogramBasedFrameComparator());
+  scene_detector_.reset(new AdjacentFramesSceneDetector());
+  video_reader_.reset(new OpenCVVideoReader());
 }
 
 sceneList CutDetector::detectScenes() {

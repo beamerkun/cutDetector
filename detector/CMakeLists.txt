@@ -1,4 +1,6 @@
 add_library(detector SHARED
+    adjacent_frames_scene_detector.cpp
+    adjacent_frames_scene_detector.hpp
     command_line_debug.cpp
     command_line_debug.hpp
     command_line_impl.cpp
@@ -7,11 +9,9 @@ add_library(detector SHARED
     command_line_strings.hpp
     cut_detector.hpp
     cut_detector.cpp
-    frame_comparator_impl.cpp
-    frame_comparator_impl.hpp
     frame_comparator_strings.cpp
     frame_comparator_strings.hpp
-    video_reader_impl.cpp
-    video_reader_impl.hpp
-    scene_detector_impl.cpp
-    scene_detector_impl.hpp )
+    histogram_based_frame_comparator.cpp
+    histogram_based_frame_comparator.hpp
+    open_cv_video_reader.cpp
+    open_cv_video_reader.hpp )

@@ -14,7 +14,7 @@ class ComparatorOptionsDialog : public QDialog {
 
  public:
   explicit ComparatorOptionsDialog(QWidget* parent = 0,
-                                   FrameComparatorImpl* frame_comparator = 0);
+                                   HistogramBasedFrameComparator* frame_comparator = 0);
   ~ComparatorOptionsDialog();
 
   void saveParameters();
@@ -23,7 +23,7 @@ class ComparatorOptionsDialog : public QDialog {
 
  private:
   Ui::ComparatorOptionsDialog* ui;
-  FrameComparatorImpl* frame_comparator_;
+  HistogramBasedFrameComparator* frame_comparator_;
 };
 
 #endif  // COMPARATOR_OPTIONS_DIALOG_H

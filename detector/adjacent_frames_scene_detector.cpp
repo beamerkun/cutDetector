@@ -7,7 +7,7 @@
 #include <unistd.h> // usleep
 #endif // win32
 
-sceneList SceneDetectorImpl::detectScenes(VideoReader* videoReader,
+sceneList AdjacentFramesSceneDetector::detectScenes(VideoReader* videoReader,
                                           FrameComparator* frameComparator) {
   if (!videoReader->isOpen()) {
     return sceneList();
@@ -64,20 +64,20 @@ sceneList SceneDetectorImpl::detectScenes(VideoReader* videoReader,
   return scenes;
 }
 
-void SceneDetectorImpl::setWaitTime(int miliseconds) {
+void AdjacentFramesSceneDetector::setWaitTime(int miliseconds) {
   wait_time_msecs_ = miliseconds;
 }
 
-void SceneDetectorImpl::RegisterObserver(SceneDetector::Observer* observer) {
+void AdjacentFramesSceneDetector::RegisterObserver(SceneDetector::Observer* observer) {
   observers_.push_back(observer);
 }
 
-void SceneDetectorImpl::UnregisterObserver(SceneDetector::Observer* observer) {
+void AdjacentFramesSceneDetector::UnregisterObserver(SceneDetector::Observer* observer) {
   observers_.erase(std::remove(observers_.begin(), observers_.end(), observer),
                    observers_.end());
 }
 
-void SceneDetectorImpl::OnCutDetected(cv::Mat& lastFrame,
+void AdjacentFramesSceneDetector::OnCutDetected(cv::Mat& lastFrame,
                                       int lastFrameIndex,
                                       cv::Mat& firstFrame,
                                       int firstFrameIndex) {
@@ -88,7 +88,7 @@ void SceneDetectorImpl::OnCutDetected(cv::Mat& lastFrame,
   }
 }
 
-void SceneDetectorImpl::OnDifferenceCalculated(cv::Mat& lastFrame,
+void AdjacentFramesSceneDetector::OnDifferenceCalculated(cv::Mat& lastFrame,
                                                int lastFrameIndex,
                                                cv::Mat& firstFrame,
                                                int firstFrameIndex,

@@ -6,7 +6,7 @@
 
 using cv::Mat;
 
-class FrameComparatorImpl : public FrameComparator {
+class HistogramBasedFrameComparator : public FrameComparator {
  public:
   struct param {
     double histogramThreshold = 0.7;
@@ -30,4 +30,4 @@ class FrameComparatorImpl : public FrameComparator {
 
  private:
   param parameters;
-};  // class FrameComparatorImpl
+};  // class HistogramBasedFrameComparator

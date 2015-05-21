@@ -42,7 +42,7 @@ void colorSubspaces(FrameComparatorImpl::param param,
 }
 */
 
-void FrameComparatorImpl::setOptionsFilename(std::string optionsFilename) {
+void HistogramBasedFrameComparator::setOptionsFilename(std::string optionsFilename) {
   using namespace rapidjson;
 
   std::vector<char> contents;
@@ -79,7 +79,7 @@ void FrameComparatorImpl::setOptionsFilename(std::string optionsFilename) {
   }
 }
 
-bool FrameComparatorImpl::isDifferentScene(Mat& lastFrame,
+bool HistogramBasedFrameComparator::isDifferentScene(Mat& lastFrame,
                                            Mat& currentFrame,
                                            double* distance) {
   int widthDiv = parameters.widthDiv;
@@ -120,7 +120,7 @@ bool FrameComparatorImpl::isDifferentScene(Mat& lastFrame,
   return histogramDistance / count < parameters.histogramThreshold;
 }
 
-double FrameComparatorImpl::calculateFrameDistance(Mat& lastFrame,
+double HistogramBasedFrameComparator::calculateFrameDistance(Mat& lastFrame,
                                                    Mat& currentFrame) {
   Mat channelsLastFrame[3];
   Mat channelsCurrentFrame[3];
@@ -156,7 +156,7 @@ double FrameComparatorImpl::calculateFrameDistance(Mat& lastFrame,
   return sum / 3;
 }
 
-std::string FrameComparatorImpl::getJsonFile() {
+std::string HistogramBasedFrameComparator::getJsonFile() {
   using namespace rapidjson;
 
   StringBuffer buffer;

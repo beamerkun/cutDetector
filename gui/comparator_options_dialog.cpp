@@ -3,7 +3,7 @@
 
 ComparatorOptionsDialog::ComparatorOptionsDialog(
     QWidget* parent,
-    FrameComparatorImpl* frame_comparator)
+    HistogramBasedFrameComparator* frame_comparator)
     : QDialog(parent),
       ui(new Ui::ComparatorOptionsDialog),
       frame_comparator_(frame_comparator) {
@@ -32,7 +32,7 @@ ComparatorOptionsDialog::~ComparatorOptionsDialog() {
 }
 
 void ComparatorOptionsDialog::applyParameters() {
-  FrameComparatorImpl::param parameters;
+  HistogramBasedFrameComparator::param parameters;
   parameters.histogramThreshold = (double)ui->thresholdSlider->value() / 1000.0;
   parameters.heightDiv = ui->heightDivLineEdit->text().toInt();
   parameters.widthDiv = ui->widthDivLineEdit->text().toInt();
@@ -41,7 +41,7 @@ void ComparatorOptionsDialog::applyParameters() {
 }
 
 void ComparatorOptionsDialog::loadParameters() {
-  FrameComparatorImpl::param parameters = frame_comparator_->getParameters();
+  HistogramBasedFrameComparator::param parameters = frame_comparator_->getParameters();
   ui->thresholdSlider->setValue(parameters.histogramThreshold * 1000);
   ui->heightDivLineEdit->setText(QString::number(parameters.heightDiv));
   ui->widthDivLineEdit->setText(QString::number(parameters.widthDiv));
