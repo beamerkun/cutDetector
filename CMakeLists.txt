@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8.11)
 project( cutDetector CXX )
 
 set( CMAKE_CXX_COMPILER "/usr/bin/clang++" )
-set( CMAKE_BUILD_TYPE Debug )
+set( CMAKE_BUILD_TYPE Release )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Weffc++ -Werror" )
 set( CMAKE_INCLUDE_CURRENT_DIR ON )
 
