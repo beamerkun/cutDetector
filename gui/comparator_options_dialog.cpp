@@ -38,6 +38,7 @@ void ComparatorOptionsDialog::applyParameters() {
   parameters.widthDiv = ui->widthDivLineEdit->text().toInt();
   parameters.limitRejects = ui->rejectedLimitCheckBox->isChecked();
   parameters.rejected = ui->rejectedLineEdit->text().toInt();
+  frame_comparator_->setParameters(parameters);
 }
 
 void ComparatorOptionsDialog::loadParameters() {

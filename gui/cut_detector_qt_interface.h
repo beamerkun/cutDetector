@@ -58,5 +58,6 @@ class CutDetectorQtInterface : public QObject,
  private:
   void putFrameIndex(cv::Mat& frame, int index);
 
+  bool debug_;
   CutDetector* detector_;
 };

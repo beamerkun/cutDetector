@@ -28,6 +28,9 @@ class OpenCVVideoReader : public VideoReader {
   // Currently opened file filename.
   std::string filename_;
 
+  // Frame offset.
+  int offset_;
+
   // Observer list.
   std::vector<VideoReader::Observer*> observers_;
 };  // OpenCVVideoReader

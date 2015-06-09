@@ -8,7 +8,7 @@
 #include <histogram_based_frame_comparator.hpp>
 
 CutDetectorQtInterface::CutDetectorQtInterface(QObject* parent)
-    : QObject(parent), detector_(nullptr) {
+    : QObject(parent), debug_(false), detector_(nullptr) {
 }
 
 CutDetectorQtInterface::~CutDetectorQtInterface() {
@@ -27,10 +27,13 @@ void CutDetectorQtInterface::OnCutDetected(SceneDetector::Frame& last,
   emit showNewSceneFirstFrame(first_with_no);
 }
 
-void CutDetectorQtInterface::OnDifferenceCalculated(
-    SceneDetector::Frame& /*last*/,
-    SceneDetector::Frame& /*first*/,
-    double /*difference*/) {
+void CutDetectorQtInterface::OnDifferenceCalculated(SceneDetector::Frame& last,
+                                                    SceneDetector::Frame& first,
+                                                    double difference) {
+  if (debug_) {
+    std::cout << last.index_ << "->" << first.index_ << ": " << difference
+              << std::endl;
+  }
 }
 
 void CutDetectorQtInterface::onCurrentFrameChanged(Mat& currentFrame,

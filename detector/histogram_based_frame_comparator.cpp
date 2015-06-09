@@ -1,6 +1,7 @@
 #include <histogram_based_frame_comparator.hpp>  // filter interface
 
 #include <fstream>  // filestream
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -42,7 +43,8 @@ void colorSubspaces(FrameComparatorImpl::param param,
 }
 */
 
-void HistogramBasedFrameComparator::setOptionsFilename(std::string optionsFilename) {
+void HistogramBasedFrameComparator::setOptionsFilename(
+    std::string optionsFilename) {
   using namespace rapidjson;
 
   std::vector<char> contents;
@@ -80,8 +82,8 @@ void HistogramBasedFrameComparator::setOptionsFilename(std::string optionsFilena
 }
 
 bool HistogramBasedFrameComparator::isDifferentScene(Mat& lastFrame,
-                                           Mat& currentFrame,
-                                           double* distance) {
+                                                     Mat& currentFrame,
+                                                     double* distance) {
   int widthDiv = parameters.widthDiv;
   int heightDiv = parameters.heightDiv;
   int subspaces = widthDiv * heightDiv;
@@ -120,8 +122,9 @@ bool HistogramBasedFrameComparator::isDifferentScene(Mat& lastFrame,
   return histogramDistance / count < parameters.histogramThreshold;
 }
 
-double HistogramBasedFrameComparator::calculateFrameDistance(Mat& lastFrame,
-                                                   Mat& currentFrame) {
+double HistogramBasedFrameComparator::calculateFrameDistance(
+    Mat& lastFrame,
+    Mat& currentFrame) {
   Mat channelsLastFrame[3];
   Mat channelsCurrentFrame[3];
 
@@ -135,7 +138,7 @@ double HistogramBasedFrameComparator::calculateFrameDistance(Mat& lastFrame,
   int bins = 80;
   int histSize[] = {bins};
   // Brightness range
-  float lranges[] = {0, 60};
+  float lranges[] = {0, 256};
   const float* ranges[] = {lranges};
   MatND histogramCurrent;
   MatND histogramLast;

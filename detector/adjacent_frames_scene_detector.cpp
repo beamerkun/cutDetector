@@ -17,19 +17,12 @@ sceneList AdjacentFramesSceneDetector::detectScenes(VideoReader* videoReader,
   cv::Mat lastFrame;
   sceneList scenes;
   int lastFrameIndex, currentFrameIndex;
-  int offset = 0;
   currentFrameIndex = 0;
   int sceneStartIndex = 0;
   int totalFrames = videoReader->getTotalFrameCount();
   double distance;
 
   videoReader->getFrame(currentFrameIndex, currentFrame);
-  if (currentFrame.empty()) {
-    // file indexes are not 0-based. We need to adjust.
-    offset = -1;
-    currentFrameIndex++;
-    videoReader->getFrame(currentFrameIndex, currentFrame);
-  }
 
   while (1) {
     lastFrame = currentFrame.clone();
@@ -44,7 +37,7 @@ sceneList AdjacentFramesSceneDetector::detectScenes(VideoReader* videoReader,
       break;
     }
     if (frameComparator->isDifferentScene(lastFrame, currentFrame, &distance)) {
-      int sceneEndIndex = lastFrameIndex + offset;
+      int sceneEndIndex = lastFrameIndex;
       scenes.push_back(std::make_pair(sceneStartIndex, sceneEndIndex));
       sceneStartIndex = sceneEndIndex + 1;
       OnCutDetected(lastFrame, sceneEndIndex, currentFrame, sceneStartIndex);
@@ -54,11 +47,11 @@ sceneList AdjacentFramesSceneDetector::detectScenes(VideoReader* videoReader,
       usleep(wait_time_msecs_ * 1000);
 #endif // win32
     }
-    OnDifferenceCalculated(lastFrame, lastFrameIndex + offset, currentFrame,
-                           currentFrameIndex + offset, distance);
+    OnDifferenceCalculated(lastFrame, lastFrameIndex, currentFrame,
+                           currentFrameIndex, distance);
   }
 
-  int sceneEndIndex = lastFrameIndex + offset;
+  int sceneEndIndex = lastFrameIndex;
   scenes.push_back(std::make_pair(sceneStartIndex, sceneEndIndex));
 
   return scenes;
