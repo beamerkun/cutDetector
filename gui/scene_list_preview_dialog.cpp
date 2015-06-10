@@ -55,6 +55,7 @@ void SceneListPreviewDialog::updateSceneEndPreview(int frame) {
 }
 
 void SceneListPreviewDialog::loadScenesList(QList<QString> scenes) {
+  scenes_list_.clear();
   for (QString scene : scenes) {
     scene.remove(QChar('['));
     scene.remove(QChar(']'));
