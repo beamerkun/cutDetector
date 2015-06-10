@@ -8,10 +8,14 @@ main_window::main_window(QWidget* parent, CutDetector* detector)
       ui(new Ui::main_window),
       comparator_options_dialog_(new ComparatorOptionsDialog(
           this,
-          static_cast<HistogramBasedFrameComparator*>(detector->frame_comparator()))) {
+          static_cast<HistogramBasedFrameComparator*>(
+              detector->frame_comparator()))),
+      scene_list_preview_dialog_(new SceneListPreviewDialog(this)) {
   detector_.reset(detector);
   detector_->scene_detector()->RegisterObserver(&interface_);
   detector_->video_reader()->RegisterObserver(&interface_);
+
+  scene_list_preview_dialog_->setVideoReader(detector_->video_reader());
 
   worker_thread_.start();
   interface_.set_detector(detector_.get());
@@ -85,8 +89,8 @@ void main_window::setupSignals() {
                    &main_window::clearScenesList);
   QObject::connect(ui->clearListButton, &QAbstractButton::clicked, this,
                    &main_window::clearScenesList);
-  QObject::connect(ui->loadListButton, &QAbstractButton::clicked, this,
-                   &main_window::loadSceneList);
+  QObject::connect(ui->loadListButton, &QAbstractButton::clicked,
+                   [=]() { loadSceneList(interface_.openCutsFile(this)); });
   QObject::connect(ui->saveListButton, &QAbstractButton::clicked, [=]() {
     interface_.saveCutsFile(this, generateSceneList());
   });
@@ -96,6 +100,16 @@ void main_window::setupSignals() {
   QObject::connect(ui->deleteRowButton, &QAbstractButton::clicked, [=]() {
     ui->sceneTableWidget->setRowCount(ui->sceneTableWidget->rowCount() - 1);
   });
+
+  // Scene list preview dialog
+  QObject::connect(ui->openSceneListPreviewButton, &QAbstractButton::clicked,
+                   [=]() {
+                     QList<QString> list = generateSceneList();
+                     if (!list.empty()) {
+                       this->scene_list_preview_dialog_->loadScenesList(list);
+                       this->scene_list_preview_dialog_->show();
+                     }
+                   });
 }
 
 QList<QString> main_window::generateSceneList() {
@@ -113,9 +127,7 @@ QList<QString> main_window::generateSceneList() {
   return result;
 }
 
-void main_window::loadSceneList() {
-  QList<QString> list = interface_.openCutsFile(this);
-
+void main_window::loadSceneList(QList<QString> list) {
   ui->sceneTableWidget->setRowCount(0);
   for (QString scene : list) {
     scene.remove(QChar('['));

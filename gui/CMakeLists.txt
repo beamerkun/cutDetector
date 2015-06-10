@@ -12,11 +12,14 @@ add_library( gui SHARED
              cut_detector_qt_interface.h
              gui.cpp
              gui.hpp
-             opencv_image_widget.cpp
-             opencv_image_widget.h
              main_window.cpp
              main_window.h
-             main_window.ui )
+             main_window.ui
+             opencv_image_widget.cpp
+             opencv_image_widget.h
+             scene_list_preview_dialog.cpp
+             scene_list_preview_dialog.h
+             scene_list_preview_dialog.ui )
 
 target_link_libraries( gui Qt5::Core
                            Qt5::Widgets )

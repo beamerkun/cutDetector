@@ -7,6 +7,7 @@
 #include <comparator_options_dialog.h>
 #include <cut_detector.hpp>
 #include <cut_detector_qt_interface.h>
+#include <scene_list_preview_dialog.h>
 
 namespace Ui {
 class main_window;
@@ -26,11 +27,12 @@ class main_window : public QMainWindow {
  private:
   void setupSignals();
   QList<QString> generateSceneList();
-  void loadSceneList();
+  void loadSceneList(QList<QString> list);
 
   Ui::main_window* ui;
 
   ComparatorOptionsDialog* comparator_options_dialog_;
+  SceneListPreviewDialog* scene_list_preview_dialog_;
 
   QThread worker_thread_;
 
