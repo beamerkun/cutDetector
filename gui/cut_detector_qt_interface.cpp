@@ -3,6 +3,8 @@
 #include "cut_detector.hpp"
 
 #include <iostream>
+#include <string>
+
 #include <QTextStream>
 
 #include <histogram_based_frame_comparator.hpp>

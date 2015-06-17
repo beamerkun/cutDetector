@@ -1,4 +1,4 @@
-add_library(detector SHARED
+add_library(detector STATIC
     adjacent_frames_scene_detector.cpp
     adjacent_frames_scene_detector.hpp
     command_line_debug.cpp
@@ -15,3 +15,5 @@ add_library(detector SHARED
     histogram_based_frame_comparator.hpp
     open_cv_video_reader.cpp
     open_cv_video_reader.hpp )
+
+target_link_libraries( detector ${OpenCV_LIBS} )

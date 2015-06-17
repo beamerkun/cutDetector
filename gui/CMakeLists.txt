@@ -1,10 +1,10 @@
 set( CMAKE_AUTOMOC ON )
 set( CMAKE_AUTOUIC ON )
 
-find_package( Qt5Core )
-find_package( Qt5Widgets )
+find_package( Qt5Widgets REQUIRED )
+find_package( OpenCV REQUIRED )
 
-add_library( gui SHARED
+add_library( gui STATIC
              comparator_options_dialog.cpp
              comparator_options_dialog.h
              comparator_options_dialog.ui
@@ -21,5 +21,7 @@ add_library( gui SHARED
              scene_list_preview_dialog.h
              scene_list_preview_dialog.ui )
 
-target_link_libraries( gui Qt5::Core
-                           Qt5::Widgets )
+target_link_libraries( gui detector
+                           Qt5::Core
+                           Qt5::Widgets
+                           ${OpenCV_LIBS} )

@@ -20,16 +20,16 @@ int main(int argc, char* argv[]) {
     return -1;
   }
 
+  if (commandLine->isGui()) {
+    gui::startGraphicsInterface(argc, argv, detector.release());
+    return 0;
+  }
+
   detector->video_reader()->openFile(commandLine->getFilename());
 
   std::string optionsFilename = commandLine->getOptionsFilename();
   if (!optionsFilename.empty())
     detector->frame_comparator()->setOptionsFilename(optionsFilename);
-
-  if (commandLine->isGui()) {
-    gui::startGraphicsInterface(argc, argv, detector.release());
-    return 0;
-  }
 
   std::unique_ptr<CommandLineDebug> cl_debug;
   if (commandLine->isDebug()) {
