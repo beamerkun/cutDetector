@@ -14,8 +14,6 @@ add_library( gui SHARED
              comparator_options_dialog.ui
              cut_detector_qt_interface.cpp
              cut_detector_qt_interface.h
-             gui.cpp
-             gui.hpp
              main_window.cpp
              main_window.h
              main_window.ui
