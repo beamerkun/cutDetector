@@ -1,4 +1,4 @@
-add_library(detector STATIC
+add_library(detector SHARED
     adjacent_frames_scene_detector.cpp
     adjacent_frames_scene_detector.hpp
     command_line_debug.cpp

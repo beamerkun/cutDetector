@@ -1,10 +1,11 @@
 set( CMAKE_AUTOMOC ON )
 set( CMAKE_AUTOUIC ON )
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -mwindows" )
 
 find_package( Qt5Widgets REQUIRED )
 find_package( OpenCV REQUIRED )
 
-add_library( gui STATIC
+add_library( gui SHARED
              comparator_options_dialog.cpp
              comparator_options_dialog.h
              comparator_options_dialog.ui
@@ -25,3 +26,7 @@ target_link_libraries( gui detector
                            Qt5::Core
                            Qt5::Widgets
                            ${OpenCV_LIBS} )
+
+add_executable( cutDetector_gui main_gui.cpp )
+
+target_link_libraries( cutDetector_gui gui )

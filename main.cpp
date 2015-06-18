@@ -9,7 +9,6 @@
 #include <adjacent_frames_scene_detector.hpp>
 #include <open_cv_video_reader.hpp>
 #include <cut_detector.hpp>
-#include <gui/gui.hpp>
 
 int main(int argc, char* argv[]) {
   std::unique_ptr<CutDetector> detector(new CutDetector());
@@ -18,11 +17,6 @@ int main(int argc, char* argv[]) {
 
   if (!commandLine->Init(argc, argv)) {
     return -1;
-  }
-
-  if (commandLine->isGui()) {
-    gui::startGraphicsInterface(argc, argv, detector.release());
-    return 0;
   }
 
   detector->video_reader()->openFile(commandLine->getFilename());
