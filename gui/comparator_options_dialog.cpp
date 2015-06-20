@@ -18,6 +18,10 @@ ComparatorOptionsDialog::ComparatorOptionsDialog(
   // Rejects
   QObject::connect(ui->rejectedLimitCheckBox, &QCheckBox::toggled,
                    ui->rejectedLineEdit, &QLineEdit::setEnabled);
+  QObject::connect(ui->rejectedLimitCheckBox, &QCheckBox::toggled,
+                   ui->coefficientLineEdit, &QLineEdit::setEnabled);
+  QObject::connect(ui->rejectedLimitCheckBox, &QCheckBox::toggled,
+                   ui->constantLineEdit, &QLineEdit::setEnabled);
   // Buttons
   QObject::connect(ui->applyButton, &QAbstractButton::clicked, [=]() {
     applyParameters();
@@ -38,6 +42,8 @@ void ComparatorOptionsDialog::applyParameters() {
   parameters.widthDiv = ui->widthDivLineEdit->text().toInt();
   parameters.limitRejects = ui->rejectedLimitCheckBox->isChecked();
   parameters.rejected = ui->rejectedLineEdit->text().toInt();
+  parameters.coefficient = ui->coefficientLineEdit->text().toFloat();
+  parameters.constant = ui->constantLineEdit->text().toFloat();
   frame_comparator_->setParameters(parameters);
 }
 
@@ -48,4 +54,6 @@ void ComparatorOptionsDialog::loadParameters() {
   ui->widthDivLineEdit->setText(QString::number(parameters.widthDiv));
   ui->rejectedLimitCheckBox->setChecked(parameters.limitRejects);
   ui->rejectedLineEdit->setText(QString::number(parameters.rejected));
+  ui->coefficientLineEdit->setText(QString::number(parameters.coefficient));
+  ui->constantLineEdit->setText(QString::number(parameters.constant));
 }

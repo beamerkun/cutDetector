@@ -14,6 +14,8 @@ class HistogramBasedFrameComparator : public FrameComparator {
     int rejected = 5;
     int widthDiv = 16;
     int heightDiv = 9;
+    float coefficient = 0.3;
+    float constant = 0;
   };
 
   // Overriden from FrameComparator

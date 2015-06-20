@@ -1,6 +1,8 @@
 #include "main_window.h"
 #include "ui_main_window.h"
 
+#include <QtGlobal>
+
 #include <scene_detector.h>
 
 main_window::main_window(QWidget* parent, CutDetector* detector)
@@ -73,8 +75,10 @@ void main_window::setupSignals() {
       [=](int current, int total) {
         ui->playbackSlider->setValue(((double)current / total) * 100);
       });
-  QObject::connect(ui->actionOpen_file, &QAction::triggered,
-                   [=]() { interface_.openVideoFile(this); });
+  QObject::connect(ui->actionOpen_file, &QAction::triggered, [=]() {
+    interface_.openVideoFile(this);
+    clearScenesList();
+  });
   QObject::connect(ui->stepForwardButton, &QAbstractButton::clicked,
                    &interface_, &CutDetectorQtInterface::stepVideoForward);
   QObject::connect(ui->stepBackButton, &QAbstractButton::clicked, &interface_,
@@ -95,11 +99,44 @@ void main_window::setupSignals() {
     interface_.saveCutsFile(this, generateSceneList());
   });
   QObject::connect(ui->addRowButton, &QAbstractButton::clicked, [=]() {
-    ui->sceneTableWidget->setRowCount(ui->sceneTableWidget->rowCount() + 1);
+    int rowCount = ui->sceneTableWidget->rowCount();
+    ui->sceneTableWidget->setRowCount(++rowCount);
+    ui->sceneTableWidget->setCurrentCell(rowCount - 1, 0);
   });
   QObject::connect(ui->deleteRowButton, &QAbstractButton::clicked, [=]() {
-    ui->sceneTableWidget->setRowCount(ui->sceneTableWidget->rowCount() - 1);
+    int rowCount = ui->sceneTableWidget->rowCount();
+    ui->sceneTableWidget->setRowCount(--rowCount);
+    ui->sceneTableWidget->setCurrentCell(rowCount - 1, 0);
   });
+
+  // Scene list table widget
+  QObject::connect(ui->sceneTableWidget, &QTableWidget::cellChanged,
+                   [=](int row, int collumn) {
+                     auto item = ui->sceneTableWidget->item(row, collumn);
+                     if (item->text().isEmpty())
+                       return;
+                     int rowCount = ui->sceneTableWidget->rowCount();
+                     if (rowCount <= (row + 1)) {
+                       ui->sceneTableWidget->setRowCount(++rowCount);
+                     }
+                     int currentVal = item->text().toInt();
+                     auto newItem = new QTableWidgetItem();
+                     int nextRow = collumn ? row + 1 : row;
+                     int nextCol = (collumn + 1) % 2;
+                     int newValue = currentVal + 1;
+                     if (collumn == 0) {
+                       auto nextItem =
+                           ui->sceneTableWidget->item(nextRow, nextCol);
+                       if (!nextItem || nextItem->text().isEmpty() ||
+                           nextItem->text().toInt() > newValue) {
+                         ui->sceneTableWidget->setCurrentCell(nextRow, collumn);
+                         return;
+                       }
+                     }
+                     newItem->setText(QString::number(newValue));
+                     ui->sceneTableWidget->setItem(nextRow, nextCol, newItem);
+                     ui->sceneTableWidget->setCurrentCell(nextRow, nextCol);
+                   });
 
   // Scene list preview dialog
   QObject::connect(ui->openSceneListPreviewButton, &QAbstractButton::clicked,
@@ -113,6 +150,7 @@ void main_window::setupSignals() {
 }
 
 QList<QString> main_window::generateSceneList() {
+  ui->sceneTableWidget->blockSignals(true);
   QList<QString> result;
   for (int i = 0; i < ui->sceneTableWidget->rowCount(); ++i) {
     QString temp = "[";
@@ -124,6 +162,7 @@ QList<QString> main_window::generateSceneList() {
     }
     result.push_back(temp + "]");
   }
+  ui->sceneTableWidget->blockSignals(false);
   return result;
 }
 

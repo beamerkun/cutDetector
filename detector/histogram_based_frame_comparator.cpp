@@ -109,7 +109,8 @@ bool HistogramBasedFrameComparator::isDifferentScene(Mat& lastFrame,
   double m = mean(result)[0];
   for (int i = 0; i < subspaces; ++i) {
     double* ptr = result.ptr<double>(i);
-    if (std::abs(*ptr - m) < 0.3 * m ||
+    if (std::abs(*ptr - m) <
+            (parameters.coefficient * m + parameters.constant) ||
         (parameters.limitRejects && parameters.rejected < rejected)) {
       histogramDistance += *ptr;
       count++;
