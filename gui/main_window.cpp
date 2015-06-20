@@ -158,9 +158,13 @@ QList<QString> main_window::generateSceneList() {
       if (j != 0)
         temp += ";";
 
-      temp += ui->sceneTableWidget->item(i, j)->text();
+      if (ui->sceneTableWidget->item(i, j))
+        temp += ui->sceneTableWidget->item(i, j)->text();
+      else
+        temp.clear();
     }
-    result.push_back(temp + "]");
+    if (!temp.isEmpty())
+      result.push_back(temp + "]");
   }
   ui->sceneTableWidget->blockSignals(false);
   return result;
