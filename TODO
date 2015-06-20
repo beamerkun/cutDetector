@@ -1,2 +1,5 @@
 Global TODO list:
 - add header notes to every file
+- fix issues with stepping backward, possible fixes
+    * decode once, then just recall images from memory/disk
+    * go back to full rewind method
