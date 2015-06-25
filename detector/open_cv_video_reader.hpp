@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unordered_map>
+
 #include "video_reader.h"
 
 #include <opencv/highgui.h>  // VideoCapture
@@ -20,6 +22,16 @@ class OpenCVVideoReader : public VideoReader {
   void UnregisterObserver(Observer* observer) override;
 
  private:
+  class FrameCache {
+   public:
+    void storeFrame(int index, cv::Mat& frame);
+    bool getFrame(int index, cv::Mat& result);
+
+   private:
+    size_t frameCacheSize = 20;
+    std::map<int, cv::Mat> cache_;
+  };
+
   void OnCurrentVideoFrameChanged(cv::Mat& frame, int index);
 
   // Currently opened file.
@@ -30,6 +42,8 @@ class OpenCVVideoReader : public VideoReader {
 
   // Frame offset.
   int offset_;
+
+  FrameCache cache_;
 
   // Observer list.
   std::vector<VideoReader::Observer*> observers_;
