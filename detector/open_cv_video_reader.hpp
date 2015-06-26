@@ -28,7 +28,7 @@ class OpenCVVideoReader : public VideoReader {
     bool getFrame(int index, cv::Mat& result);
 
    private:
-    size_t frameCacheSize = 20;
+    const size_t frameCacheSize = 100;
     std::map<int, cv::Mat> cache_;
   };
 

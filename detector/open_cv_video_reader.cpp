@@ -18,14 +18,8 @@ void OpenCVVideoReader::FrameCache::storeFrame(int index, cv::Mat& frame) {
 bool OpenCVVideoReader::FrameCache::getFrame(int index, cv::Mat& result) {
   auto frame = cache_.find(index);
 
-  if (frame == cache_.end()) {
-    std::cout << "[ ";
-    for (auto elem : cache_) {
-      std::cout << elem.first << " ";
-    }
-    std::cout << "]" << std::endl;
+  if (frame == cache_.end())
     return false;
-  }
 
   frame->second.copyTo(result);
   return true;
