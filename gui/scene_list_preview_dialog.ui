@@ -13,26 +13,29 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,0,0">
+  <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0">
    <item>
-    <layout class="QHBoxLayout" name="framePreviewsHorizontalLayout" stretch="1,1">
+    <layout class="QHBoxLayout" name="framePreviewsHorizontalLayout" stretch="2,3,3,2">
      <item>
-      <layout class="QVBoxLayout" name="sceneStartPreviewVerticalLayout" stretch="0,1,0,0">
+      <layout class="QVBoxLayout" name="firstSceneStartPreviewVerticalLayout" stretch="1,2,0">
        <item>
-        <widget class="QLabel" name="sceneStartPreviewTitleLabel">
-         <property name="text">
-          <string>Scene start</string>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
          </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
          </property>
-        </widget>
+        </spacer>
        </item>
        <item>
-        <widget class="OpenCVImageWidget" name="sceneStartPreviewOpenCVImageWidget" native="true"/>
+        <widget class="OpenCVImageWidget" name="firstSceneStartPreviewOpenCVImageWidget" native="true"/>
        </item>
        <item>
-        <widget class="QLabel" name="sceneStartPreviewCurrentFrameNumberLabel">
+        <widget class="QLabel" name="firstSceneStartPreviewCurrentFrameNumberLabel">
          <property name="text">
           <string>0</string>
          </property>
@@ -40,80 +43,16 @@
           <set>Qt::AlignCenter</set>
          </property>
         </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="sceneStartPreviewVideoControlsHorizontalLayout">
-         <item>
-          <spacer name="horizontalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QToolButton" name="sceneStartPreviewStepBackwardButton">
-           <property name="text">
-            <string>&lt;|</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="sceneStartPreviewFrameLineEdit">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="sceneStartPreviewStepForwardButton">
-           <property name="text">
-            <string>|&gt;</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
        </item>
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="sceneEndPreviewVerticalLayout" stretch="0,1,0,0">
+      <layout class="QVBoxLayout" name="firstSceneEndPreviewVerticalLayout" stretch="1,0">
        <item>
-        <widget class="QLabel" name="sceneEndPreviewTitleLabel">
-         <property name="text">
-          <string>Scene end</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
+        <widget class="OpenCVImageWidget" name="firstSceneEndPreviewOpenCVImageWidget" native="true"/>
        </item>
        <item>
-        <widget class="OpenCVImageWidget" name="sceneEndPreviewOpenCVImageWidget" native="true"/>
-       </item>
-       <item>
-        <widget class="QLabel" name="sceneEndPreviewCurrentFrameNumberLabel">
+        <widget class="QLabel" name="firstSceneEndPreviewCurrentFrameNumberLabel">
          <property name="text">
           <string>0</string>
          </property>
@@ -122,59 +61,52 @@
          </property>
         </widget>
        </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="secondSceneStartPreviewVerticalLayout" stretch="1,0">
        <item>
-        <layout class="QHBoxLayout" name="sceneEndPreviewVideoControlButtonsHorizontalLayout">
-         <item>
-          <spacer name="horizontalSpacer_5">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QToolButton" name="sceneEndPreviewStepBackwardButton">
-           <property name="text">
-            <string>&lt;|</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="sceneEndPreviewFrameLineEdit">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="sceneEndPreviewStepForwardButton">
-           <property name="text">
-            <string>|&gt;</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_6">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
+        <widget class="OpenCVImageWidget" name="secondSceneStartPreviewOpenCVImageWidget" native="true"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="secondSceneStartPreviewCurrentFrameNumberLabel">
+         <property name="text">
+          <string>0</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="secondSceneEndPreviewVerticalLayout" stretch="1,2,0">
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="OpenCVImageWidget" name="secondSceneEndPreviewOpenCVImageWidget" native="true"/>
+       </item>
+       <item>
+        <widget class="QLabel" name="secondSceneEndPreviewCurrentFrameNumberLabel">
+         <property name="text">
+          <string>0</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -264,16 +196,9 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="dialogSaveButton">
+      <widget class="QPushButton" name="dialogCloseButton">
        <property name="text">
-        <string>Save</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="dialogCancelButton">
-       <property name="text">
-        <string>Cancel</string>
+        <string>Close</string>
        </property>
       </widget>
      </item>
@@ -305,7 +230,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>dialogCancelButton</sender>
+   <sender>dialogCloseButton</sender>
    <signal>clicked()</signal>
    <receiver>SceneListPreviewDialog</receiver>
    <slot>close()</slot>

@@ -9,6 +9,9 @@ namespace Ui {
 class SceneListPreviewDialog;
 }
 
+class OpenCVImageWidget;
+class QLabel;
+
 class SceneListPreviewDialog : public QDialog {
   Q_OBJECT
 
@@ -23,9 +26,17 @@ class SceneListPreviewDialog : public QDialog {
  private:
   void setupSignals();
 
+  OpenCVImageWidget* getOpenCVWidgetForSceneEnd(int scene);
+  OpenCVImageWidget* getOpenCVWidgetForSceneStart(int scene);
+
+  QLabel* getFrameNumberLabelForSceneEnd(int scene);
+  QLabel* getFrameNumberLabelForSceneStart(int scene);
+
   void updateSceneCounter();
-  void updateSceneStartPreview(int frame);
-  void updateSceneEndPreview(int frame);
+  void updateSceneStartPreview(int scene, int frame);
+  void updateSceneEndPreview(int scene, int frame);
+
+  void clearScenePreview(int scene);
 
   void goToScene(int number);
 
