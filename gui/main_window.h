@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QThread>
+#include <QKeyEvent>
 
 #include <comparator_options_dialog.h>
 #include <cut_detector.hpp>
@@ -23,6 +24,9 @@ class main_window : public QMainWindow {
  public slots:
   void clearScenesList();
   void openComparatorSettingsDialog();
+
+ protected:
+  void keyPressEvent(QKeyEvent* event);
 
  private:
   void setupSignals();

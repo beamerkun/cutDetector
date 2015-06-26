@@ -31,6 +31,7 @@ bool OpenCVVideoReader::openFile(std::string filename) {
     cv::Mat temp;
     videoFile_.retrieve(temp);
     offset_ = temp.empty() ? -1 : 0;
+    last_returned_frame_ = -1;
     return true;
   }
   return false;
@@ -53,6 +54,7 @@ bool OpenCVVideoReader::getFrame(int frameIndex, cv::Mat& result) {
     return false;
 
   if (!cache_.getFrame(frameIndex, result)) {
+    last_returned_frame_ = -1;
     if (frameIndex < getCurrentFrameIndex()) {
       // We can't reliably move backwards. Rewind completely.
       videoFile_.set(CV_CAP_PROP_POS_FRAMES, 0);
@@ -66,7 +68,7 @@ bool OpenCVVideoReader::getFrame(int frameIndex, cv::Mat& result) {
     videoFile_.retrieve(result);
     cache_.storeFrame(frameIndex, result);
   } else {
-    videoFile_.set(CV_CAP_PROP_POS_FRAMES, frameIndex - offset_);
+    last_returned_frame_ = frameIndex;
   }
   OnCurrentVideoFrameChanged(result, frameIndex);
   return true;
@@ -80,8 +82,11 @@ int OpenCVVideoReader::getTotalFrameCount() {
 }
 
 int OpenCVVideoReader::getCurrentFrameIndex() {
-  if (isOpen())
+  if (isOpen()) {
+    if (last_returned_frame_ != -1)
+      return last_returned_frame_;
     return (static_cast<int>(videoFile_.get(CV_CAP_PROP_POS_FRAMES)) + offset_);
+  }
   return 0;
 }
 

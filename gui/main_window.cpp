@@ -195,6 +195,19 @@ void main_window::openComparatorSettingsDialog() {
   comparator_options_dialog_->show();
 }
 
+void main_window::keyPressEvent(QKeyEvent* event) {
+  switch (event->key()) {
+    case Qt::Key_Left:
+      ui->stepBackButton->clicked();
+      break;
+    case Qt::Key_Right:
+      ui->stepForwardButton->clicked();
+      break;
+    default:
+      break;
+  }
+}
+
 main_window::~main_window() {
   worker_thread_.exit();
   worker_thread_.wait();

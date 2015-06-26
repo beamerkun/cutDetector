@@ -43,6 +43,9 @@ class OpenCVVideoReader : public VideoReader {
   // Frame offset.
   int offset_;
 
+  // Last returned frame.
+  int last_returned_frame_;
+
   FrameCache cache_;
 
   // Observer list.
