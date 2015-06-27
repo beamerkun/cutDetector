@@ -15,6 +15,9 @@ set( gui_library_sources
       comparator_options_dialog.ui
       cut_detector_qt_interface.cpp
       cut_detector_qt_interface.h
+      frame_difference_graph_dialog.cpp
+      frame_difference_graph_dialog.h
+      frame_difference_graph_dialog.ui
       main_window.cpp
       main_window.h
       main_window.ui
@@ -29,11 +32,13 @@ if (UNIX)
   set( gui_library_sources ${gui_library_sources}
                            QCustomPlot/qcustomplot.cpp
                            QCustomPlot/qcustomplot.h )
+  include_directories( QCustomPlot )
 else()
   # amalgamate is linux-only tool, fallback to pregenerated files
   set( gui_library_sources ${gui_library_sources}
                            QCustomPlot_gen/qcustomplot.cpp
                            QCustomPlot_gen/qcustomplot.h )
+  include_directories( QCustomPlot_gen )
 endif()
 
 add_library( gui SHARED ${gui_library_sources} )
