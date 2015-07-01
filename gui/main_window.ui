@@ -27,12 +27,12 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,1">
       <item>
-       <layout class="QVBoxLayout" name="videoArea" stretch="1,1,0">
+       <layout class="QVBoxLayout" name="videoArea" stretch="2,1,0">
         <property name="sizeConstraint">
          <enum>QLayout::SetDefaultConstraint</enum>
         </property>
         <item>
-         <widget class="OpenCVImageWidget" name="topOpenCVWidget" native="true">
+         <widget class="OpenCVImageWidget" name="openCVWidget" native="true">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -42,7 +42,7 @@
          </widget>
         </item>
         <item>
-         <widget class="OpenCVImageWidget" name="bottomOpenCVWidget" native="true"/>
+         <widget class="QCustomPlot" name="plotWidget" native="true"/>
         </item>
         <item>
          <widget class="QSlider" name="playbackSlider">
@@ -158,7 +158,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="playbackControls" stretch="0,0,0,0,0,0,0,0,0,0,0">
+     <layout class="QHBoxLayout" name="playbackControls" stretch="0,0,0,0,0,0,0,0,0,0">
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
@@ -209,16 +209,6 @@
          </size>
         </property>
        </spacer>
-      </item>
-      <item>
-       <widget class="QToolButton" name="showFrameDifferenceGraphButton">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Graph</string>
-        </property>
-       </widget>
       </item>
       <item>
        <widget class="QToolButton" name="openSceneListPreviewButton">
@@ -332,6 +322,12 @@
    <class>OpenCVImageWidget</class>
    <extends>QWidget</extends>
    <header>opencv_image_widget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header location="global">qcustomplot.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

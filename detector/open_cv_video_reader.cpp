@@ -1,7 +1,5 @@
 #include <open_cv_video_reader.hpp>
 
-#include <iostream>
-
 void OpenCVVideoReader::FrameCache::storeFrame(int index, cv::Mat& frame) {
   assert(frameCacheSize > 0);
   if (cache_.size() >= frameCacheSize) {

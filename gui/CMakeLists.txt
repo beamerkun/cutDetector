@@ -15,9 +15,6 @@ set( gui_library_sources
       comparator_options_dialog.ui
       cut_detector_qt_interface.cpp
       cut_detector_qt_interface.h
-      frame_difference_graph_dialog.cpp
-      frame_difference_graph_dialog.h
-      frame_difference_graph_dialog.ui
       main_window.cpp
       main_window.h
       main_window.ui

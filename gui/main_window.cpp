@@ -13,15 +13,10 @@ main_window::main_window(QWidget* parent, CutDetector* detector)
           this,
           static_cast<HistogramBasedFrameComparator*>(
               detector->frame_comparator()))),
-      frame_difference_graph_dialog_(new FrameDifferenceGraphDialog(this)),
       scene_list_preview_dialog_(new SceneListPreviewDialog(this)) {
   detector_.reset(detector);
   detector_->scene_detector()->RegisterObserver(&interface_);
   detector_->video_reader()->RegisterObserver(&interface_);
-
-  frame_difference_graph_dialog_->setComparator(
-      static_cast<HistogramBasedFrameComparator*>(
-          detector->frame_comparator()));
 
   scene_list_preview_dialog_->setVideoReader(detector_->video_reader());
 
@@ -48,12 +43,7 @@ void main_window::setupSignals() {
 
   // OpenCVWidget signals
   QObject::connect(&interface_, &CutDetectorQtInterface::showCurrentFrame,
-                   ui->bottomOpenCVWidget, &OpenCVImageWidget::showImage);
-  QObject::connect(&interface_, &CutDetectorQtInterface::showNewSceneFirstFrame,
-                   ui->bottomOpenCVWidget, &OpenCVImageWidget::showImage);
-  QObject::connect(&interface_,
-                   &CutDetectorQtInterface::showPreviousSceneLastFrame,
-                   ui->topOpenCVWidget, &OpenCVImageWidget::showImage);
+                   ui->openCVWidget, &OpenCVImageWidget::showImage);
 
   // Scene detection signals
   QObject::connect(ui->startButton, &QToolButton::clicked, &interface_,
@@ -74,6 +64,11 @@ void main_window::setupSignals() {
                    });
   QObject::connect(&interface_, &CutDetectorQtInterface::sceneDetectionStarted,
                    this, &main_window::clearScenesList);
+
+  QObject::connect(
+      &interface_, &CutDetectorQtInterface::sceneDetectionStarted, [=]() {
+        graphLimitData(detector_->video_reader()->getTotalFrameCount());
+      });
 
   // Video Reader controls
   QObject::connect(
@@ -155,29 +150,10 @@ void main_window::setupSignals() {
                      }
                    });
 
-  // Frame difference graph dialog
-  QObject::connect(
-      &interface_, &CutDetectorQtInterface::sceneListGenerated,
-      [=]() { ui->showFrameDifferenceGraphButton->setEnabled(true); });
-  QObject::connect(
-      &interface_, &CutDetectorQtInterface::sceneDetectionStarted,
-      [=]() { ui->showFrameDifferenceGraphButton->setEnabled(false); });
-  QObject::connect(&interface_, &CutDetectorQtInterface::fileOpened, [=]() {
-    ui->showFrameDifferenceGraphButton->setEnabled(false);
-  });
-  QObject::connect(&interface_, &CutDetectorQtInterface::fileClosed, [=]() {
-    ui->showFrameDifferenceGraphButton->setEnabled(false);
-  });
-  QObject::connect(ui->showFrameDifferenceGraphButton,
-                   &QAbstractButton::clicked, [=]() {
-                     this->frame_difference_graph_dialog_->setCuts(
-                         sceneListStringToInt(generateSceneList()));
-                     this->frame_difference_graph_dialog_->show();
-                   });
+  // Frame difference graph
   QObject::connect(&interface_,
-                   &CutDetectorQtInterface::frameDifferenceCalculated,
-                   frame_difference_graph_dialog_,
-                   &FrameDifferenceGraphDialog::addDifferenceValue);
+                   &CutDetectorQtInterface::frameDifferenceCalculated, this,
+                   &main_window::graphAddDifferenceValue);
 }
 
 QList<QString> main_window::generateSceneList() {
@@ -255,4 +231,66 @@ main_window::~main_window() {
   worker_thread_.exit();
   worker_thread_.wait();
   delete ui;
+}
+
+void main_window::graphAddDifferenceValue(int frameIndex, double difference) {
+  if (frameIndex >= graph_data_.size())
+    graph_data_.resize(frameIndex + 1);
+  graph_data_[frameIndex] = difference;
+  graphGenerateGraph();
+}
+
+void main_window::graphLimitData(int limit) {
+  graph_data_.resize(limit);
+  graphGenerateGraph();
+}
+
+void main_window::graphSetCuts(QList<QPair<int, int>> scenes) {
+  graph_cuts_.clear();
+  for (int i = 0; i < scenes.size(); ++i) {
+    graph_cuts_.push_back(scenes[i].first);
+  }
+  graphGenerateGraph();
+}
+
+void main_window::graphGenerateGraph() {
+  auto comparator = static_cast<HistogramBasedFrameComparator*>(
+      detector_->frame_comparator());
+
+  QVector<double> x(graph_data_.size());
+  for (int i = 0; i < (int)graph_data_.size(); ++i)
+    x[i] = i;
+
+  auto plotWidget = ui->plotWidget;
+
+  plotWidget->addGraph();
+  plotWidget->graph(0)->setData(x, graph_data_);
+
+  QVector<double> threshold_x(2),
+      threshold_y(2, comparator->getParameters().histogramThreshold);
+  threshold_x[0] = 0;
+  threshold_x[1] = graph_data_.size() - 1;
+
+  plotWidget->addGraph();
+  plotWidget->graph(1)->setData(threshold_x, threshold_y);
+  plotWidget->graph(1)->setPen(QPen(Qt::red));
+
+  QVector<double> graph_cuts_y(graph_cuts_.size());
+  for (int i = 0; i < graph_cuts_.size(); ++i) {
+    graph_cuts_y[i] = graph_data_[graph_cuts_[i]];
+  }
+  plotWidget->addGraph();
+  plotWidget->graph(2)->setData(graph_cuts_, graph_cuts_y);
+  plotWidget->graph(2)->setPen(QPen(Qt::green));
+  plotWidget->graph(2)->setLineStyle(QCPGraph::lsNone);
+  plotWidget->graph(2)
+      ->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 4));
+
+  plotWidget->xAxis->setLabel("frame no");
+  plotWidget->yAxis->setLabel("similarity");
+
+  plotWidget->xAxis->setRange(0, graph_data_.size() - 1);
+  plotWidget->yAxis->setRange(0, 1);
+
+  plotWidget->replot();
 }
