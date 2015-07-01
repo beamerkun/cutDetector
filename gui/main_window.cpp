@@ -4,6 +4,7 @@
 #include <QtGlobal>
 
 #include <scene_detector.h>
+#include <video_reader.h>
 
 main_window::main_window(QWidget* parent, CutDetector* detector)
     : QMainWindow(parent),
@@ -12,10 +13,15 @@ main_window::main_window(QWidget* parent, CutDetector* detector)
           this,
           static_cast<HistogramBasedFrameComparator*>(
               detector->frame_comparator()))),
+      frame_difference_graph_dialog_(new FrameDifferenceGraphDialog(this)),
       scene_list_preview_dialog_(new SceneListPreviewDialog(this)) {
   detector_.reset(detector);
   detector_->scene_detector()->RegisterObserver(&interface_);
   detector_->video_reader()->RegisterObserver(&interface_);
+
+  frame_difference_graph_dialog_->setComparator(
+      static_cast<HistogramBasedFrameComparator*>(
+          detector->frame_comparator()));
 
   scene_list_preview_dialog_->setVideoReader(detector_->video_reader());
 
@@ -30,7 +36,7 @@ main_window::main_window(QWidget* parent, CutDetector* detector)
 
 void main_window::setupSignals() {
   qRegisterMetaType<cv::Mat>("cv::Mat");
-  qRegisterMetaType<QVector<int> >("QVector<int>");
+  qRegisterMetaType<QVector<int>>("QVector<int>");
 
   // Detector settings signals
   QObject::connect(ui->detectorSettingsButton, &QAbstractButton::clicked, this,
@@ -143,10 +149,35 @@ void main_window::setupSignals() {
                    [=]() {
                      QList<QString> list = generateSceneList();
                      if (!list.empty()) {
-                       this->scene_list_preview_dialog_->loadScenesList(list);
+                       this->scene_list_preview_dialog_->loadScenesList(
+                           sceneListStringToInt(list));
                        this->scene_list_preview_dialog_->show();
                      }
                    });
+
+  // Frame difference graph dialog
+  QObject::connect(
+      &interface_, &CutDetectorQtInterface::sceneListGenerated,
+      [=]() { ui->showFrameDifferenceGraphButton->setEnabled(true); });
+  QObject::connect(
+      &interface_, &CutDetectorQtInterface::sceneDetectionStarted,
+      [=]() { ui->showFrameDifferenceGraphButton->setEnabled(false); });
+  QObject::connect(&interface_, &CutDetectorQtInterface::fileOpened, [=]() {
+    ui->showFrameDifferenceGraphButton->setEnabled(false);
+  });
+  QObject::connect(&interface_, &CutDetectorQtInterface::fileClosed, [=]() {
+    ui->showFrameDifferenceGraphButton->setEnabled(false);
+  });
+  QObject::connect(ui->showFrameDifferenceGraphButton,
+                   &QAbstractButton::clicked, [=]() {
+                     this->frame_difference_graph_dialog_->setCuts(
+                         sceneListStringToInt(generateSceneList()));
+                     this->frame_difference_graph_dialog_->show();
+                   });
+  QObject::connect(&interface_,
+                   &CutDetectorQtInterface::frameDifferenceCalculated,
+                   frame_difference_graph_dialog_,
+                   &FrameDifferenceGraphDialog::addDifferenceValue);
 }
 
 QList<QString> main_window::generateSceneList() {
@@ -167,6 +198,18 @@ QList<QString> main_window::generateSceneList() {
       result.push_back(temp + "]");
   }
   ui->sceneTableWidget->blockSignals(false);
+  return result;
+}
+
+QList<QPair<int, int>> main_window::sceneListStringToInt(
+    QList<QString> scenes) {
+  QList<QPair<int, int>> result;
+  for (QString scene : scenes) {
+    scene.remove(QChar('['));
+    scene.remove(QChar(']'));
+    auto cells = scene.split(";");
+    result.push_back(QPair<int, int>(cells[0].toInt(), cells[1].toInt()));
+  }
   return result;
 }
 

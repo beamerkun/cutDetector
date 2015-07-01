@@ -19,7 +19,7 @@ class SceneListPreviewDialog : public QDialog {
   SceneListPreviewDialog(QWidget* parent = 0);
   ~SceneListPreviewDialog();
 
-  void loadScenesList(QList<QString> scenes);
+  void loadScenesList(QList<QPair<int, int>> scenes);
   QList<QString> generateScenesList();
   void setVideoReader(VideoReader* video_reader);
 

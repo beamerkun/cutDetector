@@ -21,7 +21,7 @@ class SceneDetector {
 
     virtual void OnCutDetected(Frame& last, Frame& first) = 0;
     virtual void OnDifferenceCalculated(Frame& last,
-                                        Frame& first,
+                                        Frame& current,
                                         double difference) = 0;
   };  // SceneDetector::Observer
 

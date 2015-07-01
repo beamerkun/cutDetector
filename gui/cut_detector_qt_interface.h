@@ -37,9 +37,10 @@ class CutDetectorQtInterface : public QObject,
 
   void set_detector(CutDetector* detector) { detector_ = detector; }
 
- signals:
+signals:
   void fileOpened();
   void fileClosed();
+  void frameDifferenceCalculated(int frameIndex, double difference);
   void changeCurrentFrameIndex(int index, int frameCount);
   void sceneDetectionStarted();
   void sceneListGenerated(sceneList list);

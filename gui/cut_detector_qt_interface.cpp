@@ -30,12 +30,13 @@ void CutDetectorQtInterface::OnCutDetected(SceneDetector::Frame& last,
 }
 
 void CutDetectorQtInterface::OnDifferenceCalculated(SceneDetector::Frame& last,
-                                                    SceneDetector::Frame& first,
+                                                    SceneDetector::Frame& current,
                                                     double difference) {
   if (debug_) {
-    std::cout << last.index_ << "->" << first.index_ << ": " << difference
+    std::cout << last.index_ << "->" << current.index_ << ": " << difference
               << std::endl;
   }
+  emit frameDifferenceCalculated(last.index_, difference);
 }
 
 void CutDetectorQtInterface::onCurrentFrameChanged(Mat& currentFrame,

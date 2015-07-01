@@ -24,7 +24,7 @@ class AdjacentFramesSceneDetector : public SceneDetector {
                      int firstFrameIndex);
   void OnDifferenceCalculated(cv::Mat& lastFrame,
                               int lastFrameIndex,
-                              cv::Mat& firstFrame,
-                              int firstFrameIndex,
+                              cv::Mat& currentFrame,
+                              int currentFrameIndex,
                               double distance);
 };  // class AdjacentFramesSceneDetector

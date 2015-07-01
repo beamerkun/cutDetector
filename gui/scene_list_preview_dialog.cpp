@@ -76,14 +76,9 @@ void SceneListPreviewDialog::updateSceneEndPreview(int scene, int frame) {
   getFrameNumberLabelForSceneEnd(scene)->setText(QString::number(frame));
 }
 
-void SceneListPreviewDialog::loadScenesList(QList<QString> scenes) {
+void SceneListPreviewDialog::loadScenesList(QList<QPair<int,int>> scenes) {
   scenes_list_.clear();
-  for (QString scene : scenes) {
-    scene.remove(QChar('['));
-    scene.remove(QChar(']'));
-    auto cells = scene.split(";");
-    scenes_list_.push_back(QPair<int, int>(cells[0].toInt(), cells[1].toInt()));
-  }
+  scenes_list_ = scenes;
   current_scene_ = 0;
 
   goToScene(0);

@@ -83,12 +83,12 @@ void AdjacentFramesSceneDetector::OnCutDetected(cv::Mat& lastFrame,
 
 void AdjacentFramesSceneDetector::OnDifferenceCalculated(cv::Mat& lastFrame,
                                                int lastFrameIndex,
-                                               cv::Mat& firstFrame,
-                                               int firstFrameIndex,
+                                               cv::Mat& currentFrame,
+                                               int currentFrameIndex,
                                                double distance) {
   SceneDetector::Frame last(lastFrame, lastFrameIndex);
-  SceneDetector::Frame first(firstFrame, firstFrameIndex);
+  SceneDetector::Frame current(currentFrame, currentFrameIndex);
   for (auto observer : observers_) {
-    observer->OnDifferenceCalculated(last, first, distance);
+    observer->OnDifferenceCalculated(last, current, distance);
   }
 }

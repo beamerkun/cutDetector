@@ -158,7 +158,7 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="playbackControls" stretch="0,0,0,0,0,0,0,0,0,0">
+     <layout class="QHBoxLayout" name="playbackControls" stretch="0,0,0,0,0,0,0,0,0,0,0">
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
@@ -209,6 +209,16 @@
          </size>
         </property>
        </spacer>
+      </item>
+      <item>
+       <widget class="QToolButton" name="showFrameDifferenceGraphButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Graph</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QToolButton" name="openSceneListPreviewButton">
