@@ -9,6 +9,7 @@
 #include <cut_detector.hpp>
 #include <cut_detector_qt_interface.h>
 #include <scene_list_preview_dialog.h>
+#include <qcustomplot.h>
 
 namespace Ui {
 class main_window;
@@ -28,6 +29,9 @@ class main_window : public QMainWindow {
   void graphClearData() { graph_data_.clear(); }
   void graphLimitData(int limit);
   void graphSetCuts(QList<QPair<int,int>> scenes);
+
+ signals:
+  void graphNeedsUpdate(QCustomPlot::RefreshPriority priority);
 
  public slots:
   void graphAddDifferenceValue(int frameIndex, double difference);

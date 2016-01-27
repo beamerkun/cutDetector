@@ -26,12 +26,18 @@ main_window::main_window(QWidget* parent, CutDetector* detector)
 
   ui->setupUi(this);
 
+  // Create graphs in advance
+  ui->plotWidget->addGraph();
+  ui->plotWidget->addGraph();
+  ui->plotWidget->addGraph();
+
   setupSignals();
 }
 
 void main_window::setupSignals() {
   qRegisterMetaType<cv::Mat>("cv::Mat");
   qRegisterMetaType<QVector<int>>("QVector<int>");
+  qRegisterMetaType<QCustomPlot::RefreshPriority>("QCustomPlot::RefreshPriority");
 
   // Detector settings signals
   QObject::connect(ui->detectorSettingsButton, &QAbstractButton::clicked, this,
@@ -148,12 +154,15 @@ void main_window::setupSignals() {
                            sceneListStringToInt(list));
                        this->scene_list_preview_dialog_->show();
                      }
-                   });
+  });
 
   // Frame difference graph
   QObject::connect(&interface_,
                    &CutDetectorQtInterface::frameDifferenceCalculated, this,
                    &main_window::graphAddDifferenceValue);
+  QObject::connect(this,
+                   &main_window::graphNeedsUpdate,
+                   ui->plotWidget, &QCustomPlot::replot);
 }
 
 QList<QString> main_window::generateSceneList() {
@@ -263,7 +272,6 @@ void main_window::graphGenerateGraph() {
 
   auto plotWidget = ui->plotWidget;
 
-  plotWidget->addGraph();
   plotWidget->graph(0)->setData(x, graph_data_);
 
   QVector<double> threshold_x(2),
@@ -271,7 +279,6 @@ void main_window::graphGenerateGraph() {
   threshold_x[0] = 0;
   threshold_x[1] = graph_data_.size() - 1;
 
-  plotWidget->addGraph();
   plotWidget->graph(1)->setData(threshold_x, threshold_y);
   plotWidget->graph(1)->setPen(QPen(Qt::red));
 
@@ -279,7 +286,6 @@ void main_window::graphGenerateGraph() {
   for (int i = 0; i < graph_cuts_.size(); ++i) {
     graph_cuts_y[i] = graph_data_[graph_cuts_[i]];
   }
-  plotWidget->addGraph();
   plotWidget->graph(2)->setData(graph_cuts_, graph_cuts_y);
   plotWidget->graph(2)->setPen(QPen(Qt::green));
   plotWidget->graph(2)->setLineStyle(QCPGraph::lsNone);
@@ -292,5 +298,5 @@ void main_window::graphGenerateGraph() {
   plotWidget->xAxis->setRange(0, graph_data_.size() - 1);
   plotWidget->yAxis->setRange(0, 1);
 
-  plotWidget->replot();
+  emit graphNeedsUpdate(QCustomPlot::RefreshPriority::rpHint);
 }
