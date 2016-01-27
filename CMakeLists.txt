@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.11)
 
 project( cutDetector CXX )
 
-set( CMAKE_BUILD_TYPE Debug )
+set( CMAKE_BUILD_TYPE "Release" )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
 set( CMAKE_INCLUDE_CURRENT_DIR ON )
 
@@ -12,8 +12,8 @@ if( UNIX )
 endif()
 
 set( CMAKE_DEBUG_POSTFIX _d )
-set( EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/out )
-set( LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/out )
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/out )
+set( CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib )
 
 find_package( OpenCV REQUIRED )
 
