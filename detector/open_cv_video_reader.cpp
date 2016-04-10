@@ -30,13 +30,17 @@ bool OpenCVVideoReader::openFile(std::string filename) {
     videoFile_.retrieve(temp);
     offset_ = temp.empty() ? -1 : 0;
     last_returned_frame_ = -1;
+    OnFileOpened(filename);
     return true;
   }
   return false;
 }
 
 void OpenCVVideoReader::closeFile() {
-  videoFile_.release();
+  if(videoFile_.isOpened()) {
+    videoFile_.release();
+    OnFileClosed();
+  }
 }
 
 std::string OpenCVVideoReader::getCurrentFilename() {
@@ -101,6 +105,18 @@ int OpenCVVideoReader::getFrameWidth() {
 void OpenCVVideoReader::OnCurrentVideoFrameChanged(Mat& frame, int index) {
   for (auto observer : observers_) {
     observer->onCurrentFrameChanged(frame, index);
+  }
+}
+
+void OpenCVVideoReader::OnFileOpened(std::string& filename) {
+  for (auto observer : observers_) {
+    observer->onFileOpened(filename);
+  }
+}
+
+void OpenCVVideoReader::OnFileClosed() {
+  for (auto observer : observers_) {
+    observer->onFileClosed();
   }
 }
 

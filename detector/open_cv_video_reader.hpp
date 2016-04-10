@@ -33,6 +33,8 @@ class OpenCVVideoReader : public VideoReader {
   };
 
   void OnCurrentVideoFrameChanged(cv::Mat& frame, int index);
+  void OnFileOpened(std::string& filename);
+  void OnFileClosed();
 
   // Currently opened file.
   cv::VideoCapture videoFile_;
