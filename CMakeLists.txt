@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.11)
 
 project( cutDetector CXX )
 
-set( CMAKE_BUILD_TYPE "Release" )
+set( CMAKE_BUILD_TYPE "Debug" )
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
 set( CMAKE_INCLUDE_CURRENT_DIR ON )
 
@@ -25,6 +25,11 @@ include_directories( include
 
 add_subdirectory( detector )
 add_subdirectory( gui )
+
+if( CMAKE_BUILD_TYPE MATCHES "Debug" )
+  add_subdirectory( googletest )
+  add_subdirectory( tests )
+endif()
 
 add_executable( cutDetector main.cpp
                 include/scene_detector.h

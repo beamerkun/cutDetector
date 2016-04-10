@@ -7,3 +7,6 @@
 [submodule "gui/QCustomPlot"]
 	path = gui/QCustomPlot
 	url = https://gitlab.com/DerManu/QCustomPlot.git
+[submodule "googletest"]
+	path = googletest
+	url = https://github.com/google/googletest.git
