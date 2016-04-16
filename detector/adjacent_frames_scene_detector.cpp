@@ -30,7 +30,7 @@ sceneList AdjacentFramesSceneDetector::detectScenes(VideoReader* videoReader,
     lastFrameIndex = currentFrameIndex;
     currentFrameIndex++;
 
-    if (currentFrameIndex == totalFrames - 1) {
+    if (lastFrameIndex == totalFrames - 1) {
       break;
     }
     if (!videoReader->getFrame(currentFrameIndex, currentFrame)) {
