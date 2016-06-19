@@ -24,19 +24,10 @@ set( gui_library_sources
       scene_list_preview_dialog.h
       scene_list_preview_dialog.ui )
 
-if (UNIX)
-  execute_process ( COMMAND "sh" "${CMAKE_SOURCE_DIR}/gui/QCustomPlot/run-amalgamate.sh" )
-  set( gui_library_sources ${gui_library_sources}
-                           QCustomPlot/qcustomplot.cpp
-                           QCustomPlot/qcustomplot.h )
-  include_directories( QCustomPlot )
-else()
-  # amalgamate is linux-only tool, fallback to pregenerated files
-  set( gui_library_sources ${gui_library_sources}
-                           QCustomPlot_gen/qcustomplot.cpp
-                           QCustomPlot_gen/qcustomplot.h )
-  include_directories( QCustomPlot_gen )
-endif()
+set( gui_library_sources ${gui_library_sources}
+                         QCustomPlot_gen/qcustomplot.cpp
+                         QCustomPlot_gen/qcustomplot.h )
+include_directories( QCustomPlot_gen )
 
 add_library( gui SHARED ${gui_library_sources} )
 
