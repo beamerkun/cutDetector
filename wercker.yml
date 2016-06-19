@@ -1,0 +1,11 @@
+build:
+    box:
+        id: beamerkun/cutdetector
+        username: $USERNAME
+        password: $PASSWORD
+        tag: 1.1
+    steps:
+        - script:
+            name: 'hello world!'
+            code: |
+                echo 'hello world!'
