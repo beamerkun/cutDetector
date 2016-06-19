@@ -4,9 +4,6 @@
 [submodule "tclap"]
 	path = tclap
 	url = git://git.code.sf.net/p/tclap/code
-[submodule "gui/QCustomPlot"]
-	path = gui/QCustomPlot
-	url = https://gitlab.com/DerManu/QCustomPlot.git
 [submodule "googletest"]
 	path = googletest
 	url = https://github.com/google/googletest.git
