@@ -130,8 +130,8 @@ void main_window::setupSignals() {
   // Scene list table widget
   QObject::connect(ui->sceneTableWidget, &QTableWidget::cellChanged,
                    [=](int row, int collumn) {
-                     auto item = ui->sceneTableWidget->item(row, collumn);
-                     if (item->text().isEmpty())
+                     auto* item = ui->sceneTableWidget->item(row, collumn);
+                     if (!item || item->text().isEmpty())
                        return;
                      int rowCount = ui->sceneTableWidget->rowCount();
                      if (rowCount <= (row + 1)) {

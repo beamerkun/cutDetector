@@ -24,6 +24,9 @@ bool OpenCVVideoReader::FrameCache::getFrame(int index, cv::Mat& result) {
 }
 
 bool OpenCVVideoReader::openFile(std::string filename) {
+  if (videoFile_.isOpened())
+    closeFile();
+
   if (videoFile_.open(filename)) {
     filename_ = filename;
     cv::Mat temp;
@@ -37,7 +40,7 @@ bool OpenCVVideoReader::openFile(std::string filename) {
 }
 
 void OpenCVVideoReader::closeFile() {
-  if(videoFile_.isOpened()) {
+  if (videoFile_.isOpened()) {
     videoFile_.release();
     OnFileClosed();
   }
