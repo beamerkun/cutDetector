@@ -37,7 +37,8 @@ main_window::main_window(QWidget* parent, CutDetector* detector)
 void main_window::setupSignals() {
   qRegisterMetaType<cv::Mat>("cv::Mat");
   qRegisterMetaType<QVector<int>>("QVector<int>");
-  qRegisterMetaType<QCustomPlot::RefreshPriority>("QCustomPlot::RefreshPriority");
+  qRegisterMetaType<QCustomPlot::RefreshPriority>(
+      "QCustomPlot::RefreshPriority");
 
   // Detector settings signals
   QObject::connect(ui->detectorSettingsButton, &QAbstractButton::clicked, this,
@@ -77,11 +78,21 @@ void main_window::setupSignals() {
       });
 
   // Video Reader controls
-  QObject::connect(
-      &interface_, &CutDetectorQtInterface::changeCurrentFrameIndex,
-      [=](int current, int total) {
-        ui->playbackSlider->setValue(((double)current / total) * 100);
-      });
+  QObject::connect(&interface_, &CutDetectorQtInterface::fileOpened, [=]() {
+    ui->playbackSlider->setEnabled(true);
+    ui->playbackSlider->setMinimum(0);
+    ui->playbackSlider->setMaximum(this->interface_.getTotalFrameCount());
+    this->graphClearData();
+  });
+  QObject::connect(&interface_, &CutDetectorQtInterface::fileClosed,
+                   [=]() { ui->playbackSlider->setEnabled(false); });
+  QObject::connect(&interface_,
+                   &CutDetectorQtInterface::changeCurrentFrameIndex,
+                   [=](int current, int /* total */) {
+                     ui->playbackSlider->setValue(current);
+                   });
+  QObject::connect(ui->playbackSlider, &QSlider::sliderMoved,
+                   [=](int index) { this->interface_.showFrame(index); });
   QObject::connect(ui->actionOpen_file, &QAction::triggered, [=]() {
     interface_.openVideoFile(this);
     clearScenesList();
@@ -154,15 +165,14 @@ void main_window::setupSignals() {
                            sceneListStringToInt(list));
                        this->scene_list_preview_dialog_->show();
                      }
-  });
+                   });
 
   // Frame difference graph
   QObject::connect(&interface_,
                    &CutDetectorQtInterface::frameDifferenceCalculated, this,
                    &main_window::graphAddDifferenceValue);
-  QObject::connect(this,
-                   &main_window::graphNeedsUpdate,
-                   ui->plotWidget, &QCustomPlot::replot);
+  QObject::connect(this, &main_window::graphNeedsUpdate, ui->plotWidget,
+                   &QCustomPlot::replot);
 }
 
 QList<QString> main_window::generateSceneList() {
