@@ -29,6 +29,9 @@ class CutDetectorQtInterface : public QObject,
 
   void openVideoFile(QWidget* parent);
 
+  int getTotalFrameCount();
+  void showFrame(int index);
+
   QList<QString> openCutsFile(QWidget* parent);
   void saveCutsFile(QWidget* parent, QList<QString> cuts);
 
@@ -37,7 +40,7 @@ class CutDetectorQtInterface : public QObject,
 
   void set_detector(CutDetector* detector) { detector_ = detector; }
 
-signals:
+ signals:
   void fileOpened();
   void fileClosed();
   void frameDifferenceCalculated(int frameIndex, double difference);

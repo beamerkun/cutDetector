@@ -10,11 +10,9 @@
 #include <histogram_based_frame_comparator.hpp>
 
 CutDetectorQtInterface::CutDetectorQtInterface(QObject* parent)
-    : QObject(parent), debug_(false), detector_(nullptr) {
-}
+    : QObject(parent), debug_(false), detector_(nullptr) {}
 
-CutDetectorQtInterface::~CutDetectorQtInterface() {
-}
+CutDetectorQtInterface::~CutDetectorQtInterface() {}
 
 void CutDetectorQtInterface::OnCutDetected(SceneDetector::Frame& last,
                                            SceneDetector::Frame& first) {
@@ -29,9 +27,10 @@ void CutDetectorQtInterface::OnCutDetected(SceneDetector::Frame& last,
   emit showNewSceneFirstFrame(first_with_no);
 }
 
-void CutDetectorQtInterface::OnDifferenceCalculated(SceneDetector::Frame& last,
-                                                    SceneDetector::Frame& current,
-                                                    double difference) {
+void CutDetectorQtInterface::OnDifferenceCalculated(
+    SceneDetector::Frame& last,
+    SceneDetector::Frame& current,
+    double difference) {
   if (debug_) {
     std::cout << last.index_ << "->" << current.index_ << ": " << difference
               << std::endl;
@@ -61,6 +60,15 @@ void CutDetectorQtInterface::openVideoFile(QWidget* parent) {
       QFileDialog::getOpenFileName(parent, tr("Open video file..."));
   if (!filename.isEmpty())
     detector_->video_reader()->openFile(filename.toStdString());
+}
+
+int CutDetectorQtInterface::getTotalFrameCount() {
+  return detector_->video_reader()->getTotalFrameCount();
+}
+
+void CutDetectorQtInterface::showFrame(int index) {
+  cv::Mat tmp;
+  detector_->video_reader()->getFrame(index, tmp);
 }
 
 QList<QString> CutDetectorQtInterface::openCutsFile(QWidget* parent) {
@@ -114,8 +122,9 @@ void CutDetectorQtInterface::saveSettingsJsonFile(QWidget* parent) {
       QFileDialog::getSaveFileName(parent, tr("Save settings json file..."));
   if (filename.isNull())
     return;
-  std::string json = static_cast<HistogramBasedFrameComparator*>(
-                         detector_->frame_comparator())->getJsonFile();
+  std::string json =
+      static_cast<HistogramBasedFrameComparator*>(detector_->frame_comparator())
+          ->getJsonFile();
 
   QFile file(filename);
   if (!file.open(QIODevice::WriteOnly))
