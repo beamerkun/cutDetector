@@ -20,9 +20,6 @@ void CutDetectorQtInterface::OnCutDetected(SceneDetector::Frame& last,
   last.frame_.copyTo(last_with_no);
   first.frame_.copyTo(first_with_no);
 
-  putFrameIndex(last_with_no, last.index_);
-  putFrameIndex(first_with_no, first.index_);
-
   emit showPreviousSceneLastFrame(last_with_no);
   emit showNewSceneFirstFrame(first_with_no);
 }
@@ -41,10 +38,8 @@ void CutDetectorQtInterface::OnDifferenceCalculated(
 void CutDetectorQtInterface::onCurrentFrameChanged(Mat& currentFrame,
                                                    int index) {
   cv::Mat copy = currentFrame.clone();
-  putFrameIndex(copy, index);
   emit showCurrentFrame(copy);
-  emit changeCurrentFrameIndex(index,
-                               detector_->video_reader()->getTotalFrameCount());
+  emit changeCurrentFrameIndex(index);
 }
 
 void CutDetectorQtInterface::onFileOpened(std::string /* filename */) {
@@ -166,10 +161,4 @@ void CutDetectorQtInterface::stepVideoBackward() {
   cv::Mat temp;
   detector_->video_reader()->getFrame(
       detector_->video_reader()->getCurrentFrameIndex() - 1, temp);
-}
-
-void CutDetectorQtInterface::putFrameIndex(cv::Mat& frame, int index) {
-  cv::Point point(100, frame.rows / 3);
-  cv::putText(frame, std::to_string(index), point, cv::FONT_HERSHEY_PLAIN, 5.0f,
-              cv::Scalar::all(255), 5);
 }

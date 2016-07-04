@@ -19,6 +19,12 @@ class main_window : public QMainWindow {
   Q_OBJECT
 
  public:
+  enum GraphLayer {
+     DIFFERENCE = 0,
+     THRESHOLD = 1,
+     CURRENT_FRAME = 2,
+  };
+
   main_window(QWidget* parent, CutDetector* detector);
   ~main_window();
 
@@ -28,6 +34,7 @@ class main_window : public QMainWindow {
 
   void graphClearData() { graph_data_.clear(); }
   void graphLimitData(int limit);
+  void graphSetCurrentFrame(int index);
   void graphSetCuts(QList<QPair<int,int>> scenes);
 
  signals:
