@@ -6,6 +6,12 @@
 #include <scene_detector.h>
 #include <video_reader.h>
 
+namespace {
+double cCurrentIndexLabelYPosition = 1.01;
+int cCurrentIndexLabelHeight = 20;
+int cGraphRightMargin = 30;
+}
+
 main_window::main_window(QWidget* parent, CutDetector* detector)
     : QMainWindow(parent),
       ui(new Ui::main_window),
@@ -30,6 +36,8 @@ main_window::main_window(QWidget* parent, CutDetector* detector)
   ui->plotWidget->addGraph();
   ui->plotWidget->addGraph();
   ui->plotWidget->addGraph();
+  // Create text items in advance
+  ui->plotWidget->addItem(new QCPItemText(ui->plotWidget));
 
   setupSignals();
 }
@@ -88,11 +96,9 @@ void main_window::setupSignals() {
                    [=]() { ui->playbackSlider->setEnabled(false); });
   QObject::connect(&interface_,
                    &CutDetectorQtInterface::changeCurrentFrameIndex,
-                   [=](int current, int /* total */) {
-                     ui->playbackSlider->setValue(current);
-                   });
-  QObject::connect(ui->playbackSlider, &QSlider::sliderMoved,
-                   [=](int index) { this->interface_.showFrame(index); });
+                   ui->playbackSlider, &QSlider::setValue);
+  QObject::connect(ui->playbackSlider, &QSlider::sliderMoved, &interface_,
+                   &CutDetectorQtInterface::showFrame);
   QObject::connect(ui->actionOpen_file, &QAction::triggered, [=]() {
     interface_.openVideoFile(this);
     clearScenesList();
@@ -173,6 +179,9 @@ void main_window::setupSignals() {
                    &main_window::graphAddDifferenceValue);
   QObject::connect(this, &main_window::graphNeedsUpdate, ui->plotWidget,
                    &QCustomPlot::replot);
+  QObject::connect(&interface_,
+                   &CutDetectorQtInterface::changeCurrentFrameIndex, this,
+                   &main_window::graphSetCurrentFrame);
 }
 
 QList<QString> main_window::generateSceneList() {
@@ -272,6 +281,26 @@ void main_window::graphSetCuts(QList<QPair<int, int>> scenes) {
   graphGenerateGraph();
 }
 
+void main_window::graphSetCurrentFrame(int index) {
+  auto plotWidget = ui->plotWidget;
+  double d_index = static_cast<double>(index);
+  plotWidget->graph(GraphLayer::CURRENT_FRAME)
+      ->setData(QVector<double>({d_index - 1.0, d_index, d_index + 1.0}),
+                QVector<double>({0.0, 1.0, 0.0}));
+  plotWidget->graph(GraphLayer::CURRENT_FRAME)->setPen(QPen(Qt::green));
+
+  auto indexText = static_cast<QCPItemText*>(plotWidget->item(0));
+  indexText->setPositionAlignment(Qt::AlignHCenter | Qt::AlignBottom);
+  indexText->position->setType(QCPItemPosition::ptPlotCoords);
+  indexText->position->setCoords(d_index, cCurrentIndexLabelYPosition);
+  indexText->setText(QString::number(index));
+  indexText->setPen(QPen(Qt::black));
+  indexText->setBrush(QBrush(Qt::white));
+  indexText->setClipToAxisRect(false);
+
+  emit graphNeedsUpdate(QCustomPlot::RefreshPriority::rpHint);
+}
+
 void main_window::graphGenerateGraph() {
   auto comparator = static_cast<HistogramBasedFrameComparator*>(
       detector_->frame_comparator());
@@ -282,31 +311,23 @@ void main_window::graphGenerateGraph() {
 
   auto plotWidget = ui->plotWidget;
 
-  plotWidget->graph(0)->setData(x, graph_data_);
+  plotWidget->graph(GraphLayer::DIFFERENCE)->setData(x, graph_data_);
 
   QVector<double> threshold_x(2),
       threshold_y(2, comparator->getParameters().histogramThreshold);
   threshold_x[0] = 0;
   threshold_x[1] = graph_data_.size() - 1;
 
-  plotWidget->graph(1)->setData(threshold_x, threshold_y);
-  plotWidget->graph(1)->setPen(QPen(Qt::red));
-
-  QVector<double> graph_cuts_y(graph_cuts_.size());
-  for (int i = 0; i < graph_cuts_.size(); ++i) {
-    graph_cuts_y[i] = graph_data_[graph_cuts_[i]];
-  }
-  plotWidget->graph(2)->setData(graph_cuts_, graph_cuts_y);
-  plotWidget->graph(2)->setPen(QPen(Qt::green));
-  plotWidget->graph(2)->setLineStyle(QCPGraph::lsNone);
-  plotWidget->graph(2)
-      ->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssCircle, 4));
+  plotWidget->graph(GraphLayer::THRESHOLD)->setData(threshold_x, threshold_y);
+  plotWidget->graph(GraphLayer::THRESHOLD)->setPen(QPen(Qt::red));
 
   plotWidget->xAxis->setLabel("frame no");
   plotWidget->yAxis->setLabel("similarity");
 
   plotWidget->xAxis->setRange(0, graph_data_.size() - 1);
-  plotWidget->yAxis->setRange(0, 1);
+  plotWidget->yAxis->setRange(0, 1.0);
+  plotWidget->yAxis->axisRect()->setMinimumMargins(
+      QMargins(0, cCurrentIndexLabelHeight, cGraphRightMargin, 0));
 
   emit graphNeedsUpdate(QCustomPlot::RefreshPriority::rpHint);
 }

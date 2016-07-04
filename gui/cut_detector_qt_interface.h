@@ -30,7 +30,6 @@ class CutDetectorQtInterface : public QObject,
   void openVideoFile(QWidget* parent);
 
   int getTotalFrameCount();
-  void showFrame(int index);
 
   QList<QString> openCutsFile(QWidget* parent);
   void saveCutsFile(QWidget* parent, QList<QString> cuts);
@@ -44,7 +43,7 @@ class CutDetectorQtInterface : public QObject,
   void fileOpened();
   void fileClosed();
   void frameDifferenceCalculated(int frameIndex, double difference);
-  void changeCurrentFrameIndex(int index, int frameCount);
+  void changeCurrentFrameIndex(int index);
   void sceneDetectionStarted();
   void sceneListGenerated(sceneList list);
   void showCurrentFrame(const cv::Mat frame);
@@ -56,6 +55,7 @@ class CutDetectorQtInterface : public QObject,
   void changeWaitTime(int msecs);
   void rewindVideo();
   void fastforwardVideo();
+  void showFrame(int index);
   void stepVideoForward();
   void stepVideoBackward();
 
