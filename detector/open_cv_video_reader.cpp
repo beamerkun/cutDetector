@@ -1,7 +1,8 @@
-# Copyright (c) 2014-2016 Jakub 'beamerkun' Sokół
-# Licensed under MIT License
-# Full text avaliable in LICENSE file located in project root
-# http://github.com/beamerkun/cutDetector/blob/master/LICENSE
+// Copyright (c) 2014-2016 Jakub 'beamerkun' Sokół
+// Licensed under MIT License
+// Full text avaliable in LICENSE file located in project root
+// http://github.com/beamerkun/cutDetector/blob/master/LICENSE
+
 #include <open_cv_video_reader.hpp>
 
 void OpenCVVideoReader::FrameCache::storeFrame(int index, cv::Mat& frame) {
