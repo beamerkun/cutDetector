@@ -1,7 +1,7 @@
-// Copyright (c) 2014-2016 Jakub 'beamerkun' Sokół
-// Licensed under MIT License
-// Full text avaliable in LICENSE file located in project root
-// http://github.com/beamerkun/cutDetector/blob/master/LICENSE
+# Copyright (c) 2014-2016 Jakub 'beamerkun' Sokół
+# Licensed under MIT License
+# Full text avaliable in LICENSE file located in project root
+# http://github.com/beamerkun/cutDetector/blob/master/LICENSE
 
 cmake_minimum_required(VERSION 2.8.11)
 
