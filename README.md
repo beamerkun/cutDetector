@@ -10,3 +10,7 @@ Application was built with strongly separated GUI - allowing pure command-line u
 
 ## Output
 List of scenes detected, every scene described as [first frame; last frame]
+
+## Licensing
+(c) Jakub 'beamerkun' Sokół
+Project is licensed under MIT license. See LICENSE file for details.

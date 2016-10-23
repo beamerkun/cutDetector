@@ -1,3 +1,7 @@
+# Copyright (c) 2014-2016 Jakub 'beamerkun' Sokół
+# Licensed under MIT License
+# Full text avaliable in LICENSE file located in project root
+# http://github.com/beamerkun/cutDetector/blob/master/LICENSE
 set( CMAKE_AUTOMOC ON )
 set( CMAKE_AUTOUIC ON )
 
