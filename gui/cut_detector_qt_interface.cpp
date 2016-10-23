@@ -1,3 +1,8 @@
+// Copyright (c) 2014-2016 Jakub 'beamerkun' Sokół
+// Licensed under MIT License
+// Full text avaliable in LICENSE file located in project root
+// http://github.com/beamerkun/cutDetector/blob/master/LICENSE
+
 #include "cut_detector_qt_interface.h"
 
 #include "cut_detector.hpp"

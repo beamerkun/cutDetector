@@ -1,4 +1,8 @@
 #!/bin/sh
+# Copyright (c) 2014-2016 Jakub 'beamerkun' Sokół
+# Licensed under MIT License
+# Full text avaliable in LICENSE file located in project root
+# http://github.com/beamerkun/cutDetector/blob/master/LICENSE
 
 if [ $# -ne 1 ]; then
   echo "pass only one argument!"
