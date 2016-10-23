@@ -2,7 +2,6 @@
 // Licensed under MIT License
 // Full text avaliable in LICENSE file located in project root
 // http://github.com/beamerkun/cutDetector/blob/master/LICENSE
-
 box:
     id: beamerkun/cutdetector
     username: $USERNAME
