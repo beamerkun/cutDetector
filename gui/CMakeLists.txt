@@ -20,6 +20,8 @@ set( gui_library_sources
       comparator_options_dialog.ui
       cut_detector_qt_interface.cpp
       cut_detector_qt_interface.h
+      graph_widget_controller.cpp
+      graph_widget_controller.h
       main_window.cpp
       main_window.h
       main_window.ui
