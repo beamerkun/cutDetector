@@ -40,7 +40,6 @@ class main_window : public QMainWindow {
   // Scene list
   QList<QString> generateSceneList();
   QList<QPair<int,int>> sceneListStringToInt(QList<QString> scenes);
-  void loadSceneList(QList<QString> list);
 
   Ui::main_window* ui;
 
