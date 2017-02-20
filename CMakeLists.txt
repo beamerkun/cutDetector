@@ -25,7 +25,7 @@ find_package( OpenCV REQUIRED )
 include_directories( include
                      detector
                      rapidjson/include
-                     tclap/include 
+                     tclap/include
                      ${OpenCV_INCLUDE_DIRS} )
 
 add_subdirectory( detector )
