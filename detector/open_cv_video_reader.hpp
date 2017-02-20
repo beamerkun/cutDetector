@@ -5,11 +5,15 @@
 
 #pragma once
 
-#include <unordered_map>
+#include <map>
 
 #include "video_reader.h"
 
+#if CV_MAJOR_VERSION == 2
 #include <opencv/highgui.h>  // VideoCapture
+#elif CV_MAJOR_VERSION == 3
+#include <opencv2/videoio.hpp>
+#endif
 
 class OpenCVVideoReader : public VideoReader {
  public:
