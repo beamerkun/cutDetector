@@ -30,7 +30,7 @@ store-build:
     steps:
         - github-create-release:
             token: $GITHUB_TOKEN
-            tag: current
+            tag: ci-$WERCKER_MAIN_PIPELINE_STARTED
         - github-upload-asset:
             token: $GITHUB_TOKEN
             file: ./out/cutDetector
