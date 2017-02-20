@@ -26,3 +26,14 @@ build:
             code: |
                 cd $WERCKER_OUTPUT_DIR/out
                 ./runUnitTests
+store-build:
+    steps:
+        - github-create-release:
+            token: $GITHUB_TOKEN
+            tag: current
+        - github-upload-asset:
+            token: $GITHUB_TOKEN
+            file: ./out/cutDetector
+        - github-upload-asset:
+            token: $GITHUB_TOKEN
+            file: ./out/cutDetector_gui
