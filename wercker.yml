@@ -4,12 +4,34 @@
 # http://github.com/beamerkun/cutDetector/blob/master/LICENSE
 
 box:
-    id: beamerkun/cutdetector
+    id: beamerkun/cutdetector-opencv3
     username: $USERNAME
     password: $PASSWORD
-    tag: 1.2
+    tag: 1.0
 
 build:
+    steps:
+        - script:
+            name: 'init submodules'
+            code: |
+                git submodule update --init --recursive
+        - script:
+            name: 'cmake'
+            code: |
+                cd $WERCKER_OUTPUT_DIR
+                cmake $WERCKER_SOURCE_DIR
+                make
+        - script:
+            name: 'run unit tests'
+            code: |
+                cd $WERCKER_OUTPUT_DIR/out
+                ./runUnitTests
+build-opencv2:
+    box:
+        id: beamerkun/cutdetector
+        username: $USERNAME
+        password: $PASSWORD
+        tag: 1.2
     steps:
         - script:
             name: 'init submodules'
