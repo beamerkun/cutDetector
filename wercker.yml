@@ -3,11 +3,7 @@
 # Full text avaliable in LICENSE file located in project root
 # http://github.com/beamerkun/cutDetector/blob/master/LICENSE
 
-box:
-    id: beamerkun/cutdetector-opencv3
-    username: $USERNAME
-    password: $PASSWORD
-    tag: 1.0
+box: beamerkun/cutdetector-opencv3:1.0
 
 build:
     steps:
@@ -27,11 +23,7 @@ build:
                 cd $WERCKER_OUTPUT_DIR/out
                 ./runUnitTests
 build-opencv2:
-    box:
-        id: beamerkun/cutdetector
-        username: $USERNAME
-        password: $PASSWORD
-        tag: 1.2
+    box: beamerkun/cutdetector:1.2
     steps:
         - script:
             name: 'init submodules'
@@ -49,6 +41,7 @@ build-opencv2:
                 cd $WERCKER_OUTPUT_DIR/out
                 ./runUnitTests
 store-build:
+    box: appropriate/curl
     steps:
         - github-create-release:
             token: $GITHUB_TOKEN
