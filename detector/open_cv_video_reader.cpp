@@ -5,6 +5,13 @@
 
 #include <open_cv_video_reader.hpp>
 
+#if CV_MAJOR_VERSION == 3
+#define CV_CAP_PROP_FRAME_COUNT cv::CAP_PROP_FRAME_COUNT
+#define CV_CAP_PROP_FRAME_HEIGHT cv::CAP_PROP_FRAME_HEIGHT
+#define CV_CAP_PROP_FRAME_WIDTH cv::CAP_PROP_FRAME_WIDTH
+#define CV_CAP_PROP_POS_FRAMES cv::CAP_PROP_POS_FRAMES
+#endif
+
 void OpenCVVideoReader::FrameCache::storeFrame(int index, cv::Mat& frame) {
   assert(frameCacheSize > 0);
   if (cache_.size() >= frameCacheSize) {
