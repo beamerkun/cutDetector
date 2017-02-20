@@ -41,7 +41,9 @@ build-opencv2:
                 cd $WERCKER_OUTPUT_DIR/out
                 ./runUnitTests
 store-build:
-    box: appropriate/curl
+    box:
+        id: appropriate/curl
+        cmd: /bin/sh
     steps:
         - github-create-release:
             token: $GITHUB_TOKEN
