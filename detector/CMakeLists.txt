@@ -3,7 +3,7 @@
 # Full text avaliable in LICENSE file located in project root
 # http://github.com/beamerkun/cutDetector/blob/master/LICENSE
 
-add_library(detector SHARED
+add_library(detector STATIC
     adjacent_frames_scene_detector.cpp
     adjacent_frames_scene_detector.hpp
     command_line_debug.cpp
