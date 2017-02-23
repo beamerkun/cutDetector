@@ -40,6 +40,19 @@ build-opencv2:
             code: |
                 cd $WERCKER_OUTPUT_DIR/out
                 ./runUnitTests
+build-windows-cross:
+    box: beamerkun/cutdetector-cross-windows:1.6
+    steps:
+        - script:
+            name: 'init submodules'
+            code: |
+                git submodule update --init --recursive
+        - script:
+            name: 'cmake'
+            code: |
+                cd $WERCKER_OUTPUT_DIR
+                /opt/mxe/usr/bin/i686-w64-mingw32.static-cmake $WERCKER_SOURCE_DIR
+                make
 store-build:
     box:
         id: appropriate/curl
@@ -50,7 +63,7 @@ store-build:
             tag: ci-$WERCKER_MAIN_PIPELINE_STARTED
         - github-upload-asset:
             token: $GITHUB_TOKEN
-            file: ./out/cutDetector
+            file: /pipeline/output/out/cutDetector
         - github-upload-asset:
             token: $GITHUB_TOKEN
-            file: ./out/cutDetector_gui
+            file: /pipeline/output/out/cutDetector_gui
